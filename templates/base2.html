@@ -1,0 +1,484 @@
+<!DOCTYPE html>
+<html>
+{% load static %}
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
+    <title>Energy Domain</title>
+    <link rel="stylesheet" href="{% static "assets/bootstrap/css/bootstrap.min.css" %}">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato:300,400,700,300italic,400italic,700italic">
+    <link rel="stylesheet" href="{% static "assets/fonts/font-awesome.min.css" %}">
+    <link rel="stylesheet" href="static/assets/fonts/simple-line-icons.min.css">
+    <link rel="stylesheet" href="{% static 'assets/css/Contact-FormModal-Contact-Form-with-Google-Map.css' %}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.5.2/animate.min.css">
+</head>
+
+<body>
+    <nav class="navbar navbar-light navbar-expand bg-light navigation-clean">
+        <div class="container"><a class="navbar-brand" href="index.html">Energy Domain</a><button class="navbar-toggler" data-toggle="collapse" data-target="#navcol-1"></button>
+            <div class="collapse navbar-collapse" id="navcol-1"><a class="btn btn-primary ml-auto" role="button" href="#">Sign In</a></div>
+        </div>
+    </nav>
+<!--     <header class="masthead text-white text-center" 
+         style="background:url('static/assets/img/bg-masthead.jpg') no-repeat center center;background-size:cover;">
+        <div class="overlay">
+            <h1>Manage your assets&nbsp;</h1>
+        </div>
+    </header> -->
+
+    <section class="showcase">
+        <div class="container">
+              <div class="row">
+                    <div class="col-lg-4">
+                        {% block content %}
+                        {% endblock %}
+                    </div>
+                </div>
+        </div>
+    </section>
+
+
+    <section class="features-icons bg-light text-center">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-4">
+
+                    <div class="mx-auto features-icons-item mb-5 mb-lg-0 mb-lg-3">
+                        <div class="d-flex features-icons-icon"><a href="assets">&nbsp;<i class="icon-screen-desktop m-auto text-primary" data-bs-hover-animate="pulse" href="assets"></i></a></div>
+                        <h3 url="assets.html">Manage Assets</h3>
+                        <p class="lead mb-0">Manage royalties</p>
+                    </div>
+                </div>
+                <div class="col-lg-4">
+                    <div class="mx-auto features-icons-item mb-5 mb-lg-0 mb-lg-3">
+                        <div class="d-flex features-icons-icon" href="sales"><a href="#">&nbsp;<i class="icon-plus m-auto text-primary" data-bs-hover-animate="pulse"></i></a></div>
+                        <h3 href="mapsale">Buy Assets</h3>
+                        <p class="lead mb-0">Increase portfolio</p>
+                    </div>
+                </div>
+                <div class="col-lg-4">
+                    <div class="mx-auto features-icons-item mb-5 mb-lg-0 mb-lg-3">
+                        <div class="d-flex features-icons-icon"><a href="/"><i class="icon-people m-auto text-primary" data-bs-hover-animate="pulse"></i></a></div>
+                        <h3>Brokers</h3>
+                        <p class="lead mb-0">Engage as a broker</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <section class="showcase">
+        <div class="container-fluid p-0">
+            <div class="row no-gutters">
+                <div class="col-lg-2"></div>
+                <div class="col-lg-8">
+                    <div id="googleMap" style="width:100%;height:300px;" > </div> 
+
+                </div>
+            </div>
+            <div class="row no-gutters">
+                <div class="col-lg-2"></div>
+                <div class="col-lg-8">
+                    <p>Paragraph...</p>
+                </div>
+            </div>
+            <div class="row no-gutters">
+                <div class="col-lg-2"></div>
+                <div class="col-lg-8">
+                   
+                    <blockquote class="blockquote">
+                        <p class="mb-0">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer posuere erat a ante.</p>
+                        <footer class="blockquote-footer">Someone famous</footer>
+                    </blockquote>
+                </div>
+            </div>
+        </div>
+    </section>
+    <section class="testimonials text-center bg-light">
+        <div class="container">
+            <h2 class="mb-5">Current Listings</h2>
+            <div class="row">
+                <div class="col-lg-2">
+  
+                </div>
+                <div class="col-lg-8">
+                    {% block currentListings %}
+                    {% endblock %}
+                </div>
+                <div class="col-lg-2">
+  
+                </div>
+            </div>
+        </div>
+    </section>
+    <section class="call-to-action text-white text-center" style="background:url(&quot;static/assets/img/bg-masthead.jpg&quot;) no-repeat center center;background-size:cover;">
+        <div class="overlay"></div>
+        <div class="container">
+            <div class="row">
+                <div class="col-xl-9 mx-auto">
+                    <h2 class="mb-4">Ready to get started? Sign up now!</h2>
+                </div>
+                <div class="col-md-10 col-lg-8 col-xl-7 mx-auto">
+                    <form>
+                        <div class="form-row">
+                            <div class="col-12 col-md-9 mb-2 mb-md-0"><input class="form-control form-control-lg" type="email" placeholder="Enter your email..."></div>
+                            <div class="col-12 col-md-3"><button class="btn btn-primary btn-block btn-lg" type="submit">Sign up!</button></div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+
+ <section class="bg-light">
+<div class="filters row">
+                <div class="container clearfix">
+                    <div class="col-lg-3">
+                        <div class="filter-label"><label class="prefix" for="acres-min">Acres Min</label></div>
+                        <div class="filter-input">
+                            <select id="acres-min">
+                                        <option value="0">NO MIN</option>
+                                        <option value="0.25">0.25</option>
+                                        <option value="0.50">0.50</option>
+                                        <option value="0.75">0.75</option>
+                                        <option value="1">1</option>
+                                        <option value="2">2</option>
+                                        <option value="3">3</option>
+                                        <option value="4">4</option>
+                                        <option value="5">5</option>
+                                        <option value="6">6</option>
+                                        <option value="7">7</option>
+                                        <option value="8">8</option>
+                                        <option value="9">9</option>
+                                        <option value="10">10</option>
+                                        <option value="11">11</option>
+                                        <option value="12">12</option>
+                                        <option value="13">13</option>
+                                        <option value="14">14</option>
+                                        <option value="15">15</option>
+                                        <option value="16">16</option>
+                                        <option value="17">17</option>
+                                        <option value="18">18</option>
+                                        <option value="19">19</option>
+                                        <option value="20">20</option>
+                                        <option value="25">25</option>
+                                        <option value="50">50</option>
+                                        <option value="75">75</option>
+                                        <option value="100">100</option>
+                                        <option value="200">200</option>
+                                        <option value="300">300</option>
+                                        <option value="400">400</option>
+                                        <option value="500">500</option>
+                                        <option value="600">600</option>
+                                        <option value="700">700</option>
+                                        <option value="800">800</option>
+                                        <option value="900">900</option>
+                                        <option value="1000">1,000</option>
+                                        <option value="2000">2,000</option>
+                                        <option value="3000">3,000</option>
+                                        <option value="4000">4,000</option>
+                                        <option value="5000">5,000</option>
+                                        <option value="6000">6,000</option>
+                                        <option value="7000">7,000</option>
+                                        <option value="8000">8,000</option>
+                                        <option value="9000">9,000</option>
+                                        <option value="10000">10,000</option>
+
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-lg-3">
+                        <div class="filter-label"><label class="prefix" for="acres-max">Acres Max</label></div>
+                        <div class="filter-input">
+                            <select id="acres-max">
+                                        <option value="0">NO MAX</option>
+                                        <option value="0.25">0.25</option>
+                                        <option value="0.50">0.50</option>
+                                        <option value="0.75">0.75</option>
+                                        <option value="1">1</option>
+                                        <option value="2">2</option>
+                                        <option value="3">3</option>
+                                        <option value="4">4</option>
+                                        <option value="5">5</option>
+                                        <option value="6">6</option>
+                                        <option value="7">7</option>
+                                        <option value="8">8</option>
+                                        <option value="9">9</option>
+                                        <option value="10">10</option>
+                                        <option value="11">11</option>
+                                        <option value="12">12</option>
+                                        <option value="13">13</option>
+                                        <option value="14">14</option>
+                                        <option value="15">15</option>
+                                        <option value="16">16</option>
+                                        <option value="17">17</option>
+                                        <option value="18">18</option>
+                                        <option value="19">19</option>
+                                        <option value="20">20</option>
+                                        <option value="25">25</option>
+                                        <option value="50">50</option>
+                                        <option value="75">75</option>
+                                        <option value="100">100</option>
+                                        <option value="200">200</option>
+                                        <option value="300">300</option>
+                                        <option value="400">400</option>
+                                        <option value="500">500</option>
+                                        <option value="600">600</option>
+                                        <option value="700">700</option>
+                                        <option value="800">800</option>
+                                        <option value="900">900</option>
+                                        <option value="1000">1,000</option>
+                                        <option value="2000">2,000</option>
+                                        <option value="3000">3,000</option>
+                                        <option value="4000">4,000</option>
+                                        <option value="5000">5,000</option>
+                                        <option value="6000">6,000</option>
+                                        <option value="7000">7,000</option>
+                                        <option value="8000">8,000</option>
+                                        <option value="9000">9,000</option>
+                                        <option value="10000">10,000</option>
+
+                            </select>
+                        </div>
+                    </div>
+                        <div class="col-lg-3">
+                            <div class="filter-label"><label class="prefix" for="price-min">$ Min</label></div>
+                            <div class="filter-input">
+                                <select id="price-min">
+
+                                    <option value="0">NO MIN</option>
+                                    <option value="5000">$5000</option>
+                                    <option value="10000">$10,000</option>
+                                    <option value="15000">$15,000</option>
+                                    <option value="20000">$20,000</option>
+                                    <option value="25000">$25,000</option>
+                                    <option value="50000">$50,000</option>
+                                    <option value="75000">$75,000</option>
+                                    <option value="100000">$100,000</option>
+                                    <option value="200000">$200,000</option>
+                                    <option value="300000">$300,000</option>
+                                    <option value="400000">$400,000</option>
+                                    <option value="500000">$500,000</option>
+                                    <option value="600000">$600,000</option>
+                                    <option value="700000">$700,000</option>
+                                    <option value="800000">$800,000</option>
+                                    <option value="900000">$900,000</option>
+                                    <option value="1000000">$1,000,000</option>
+                                    <option value="1500000">$1,500,000</option>
+                                    <option value="2000000">$2,000,000</option>
+                                    <option value="3000000">$3,000,000</option>
+                                    <option value="4000000">$4,000,000</option>
+                                    <option value="5000000">$5,000,000</option>
+                                    <option value="6000000">$6,000,000</option>
+                                    <option value="7000000">$7,000,000</option>
+                                    <option value="8000000">$8,000,000</option>
+                                    <option value="9000000">$9,000,000</option>
+                                    <option value="10000000">$10,000,000</option>
+                                    <option value="15000000">$15,000,000</option>
+                                    <option value="20000000">$20,000,000</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-lg-3">
+                            <div class="filter-label"><label class="prefix" for="price-max">$ Max</label></div>
+                            <div class="filter-input">
+                                <select id="price-max">
+
+                                    <option value="0">NO MAX</option>
+                                    <option value="5000">$5000</option>
+                                    <option value="10000">$10,000</option>
+                                    <option value="15000">$15,000</option>
+                                    <option value="20000">$20,000</option>
+                                    <option value="25000">$25,000</option>
+                                    <option value="50000">$50,000</option>
+                                    <option value="75000">$75,000</option>
+                                    <option value="100000">$100,000</option>
+                                    <option value="200000">$200,000</option>
+                                    <option value="300000">$300,000</option>
+                                    <option value="400000">$400,000</option>
+                                    <option value="500000">$500,000</option>
+                                    <option value="600000">$600,000</option>
+                                    <option value="700000">$700,000</option>
+                                    <option value="800000">$800,000</option>
+                                    <option value="900000">$900,000</option>
+                                    <option value="1000000">$1,000,000</option>
+                                    <option value="1500000">$1,500,000</option>
+                                    <option value="2000000">$2,000,000</option>
+                                    <option value="3000000">$3,000,000</option>
+                                    <option value="4000000">$4,000,000</option>
+                                    <option value="5000000">$5,000,000</option>
+                                    <option value="6000000">$6,000,000</option>
+                                    <option value="7000000">$7,000,000</option>
+                                    <option value="8000000">$8,000,000</option>
+                                    <option value="9000000">$9,000,000</option>
+                                    <option value="10000000">$10,000,000</option>
+                                    <option value="15000000">$15,000,000</option>
+                                    <option value="20000000">$20,000,000</option>
+                                </select>
+                            </div>
+                        </div>
+                            <div class="col-lg-3">
+                                <div class="filter-label"><label class="prefix" for="acre-price-min">$ / Ac Min</label></div>
+                                <div class="filter-input">
+                                    <select id="acre-price-min">
+
+                                        <option value="0">NO MIN</option>
+                                        <option value="250">$250</option>
+                                        <option value="500">$500</option>
+                                        <option value="750">$750</option>
+                                        <option value="1000">$1,000</option>
+                                        <option value="1500">$1,500</option>
+                                        <option value="2000">$2,000</option>
+                                        <option value="2500">$2,500</option>
+                                        <option value="3000">$3,000</option>
+                                        <option value="3500">$3,500</option>
+                                        <option value="4000">$4,000</option>
+                                        <option value="4500">$4,500</option>
+                                        <option value="5000">$5,000</option>
+                                        <option value="5500">$5,500</option>
+                                        <option value="6000">$6,000</option>
+                                        <option value="6500">$6,500</option>
+                                        <option value="7000">$7,000</option>
+                                        <option value="7500">$7,500</option>
+                                        <option value="8000">$8,000</option>
+                                        <option value="8500">$8,500</option>
+                                        <option value="9000">$9,000</option>
+                                        <option value="9500">$9,500</option>
+                                        <option value="10000">$10,000</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-lg-3">
+                                <div class="filter-label"><label class="prefix" for="acre-price-max">$ / Ac Max</label></div>
+                                <div class="filter-input">
+                                    <select id="acre-price-max">
+
+                                        <option value="0">NO MAX</option>
+                                        <option value="250">$250</option>
+                                        <option value="500">$500</option>
+                                        <option value="750">$750</option>
+                                        <option value="1000">$1,000</option>
+                                        <option value="1500">$1,500</option>
+                                        <option value="2000">$2,000</option>
+                                        <option value="2500">$2,500</option>
+                                        <option value="3000">$3,000</option>
+                                        <option value="3500">$3,500</option>
+                                        <option value="4000">$4,000</option>
+                                        <option value="4500">$4,500</option>
+                                        <option value="5000">$5,000</option>
+                                        <option value="5500">$5,500</option>
+                                        <option value="6000">$6,000</option>
+                                        <option value="6500">$6,500</option>
+                                        <option value="7000">$7,000</option>
+                                        <option value="7500">$7,500</option>
+                                        <option value="8000">$8,000</option>
+                                        <option value="8500">$8,500</option>
+                                        <option value="9000">$9,000</option>
+                                        <option value="9500">$9,500</option>
+                                        <option value="10000">$10,000</option>
+                                    </select>
+                                </div>
+                            </div>
+                        <div class="col-lg-3">
+                            <div class="filter-label"><label class="prefix" for="search-type">Type</label></div>
+                            <div class="filter-input">
+                                <select id="search-type">
+                                    <option value="/land-for-sale" selected="">FOR SALE</option>
+                                    <option value="/land-auctions">AUCTIONS</option>
+                                    <option value="/land-for-lease">FOR LEASE</option>
+                                    <option value="/land-fsbo">FSBO</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-lg-3">
+                            <div class="filter-label"><label class="prefix" for="search-status">Status</label></div>
+                            <div class="filter-input">
+                                <select id="search-status">
+                                    <option value="0">ANY</option>
+                                    <option value="1">AVAILABLE</option>
+                                    <option value="2">UNDER CONTRACT</option>
+                                    <option value="3">SOLD</option>
+                                </select>
+                            </div>
+                        </div>
+                                            <div class="switch-col">
+                            <fieldset class="switch tiny">
+                                <input type="checkbox" id="residence">
+                                <label for="residence"></label>
+                                <span>Residence</span>
+                            </fieldset>
+                        </div>
+                        <div class="switch-col">
+                            <fieldset class="switch tiny">
+                                <input type="checkbox" id="commercial">
+                                <label for="commercial"></label>
+                                <span>Commercial</span>
+                            </fieldset>
+                        </div>
+                    <div class="switch-col">
+                        <fieldset class="switch tiny">
+                            <input type="checkbox" id="owner-finance">
+                            <label for="owner-finance"></label>
+                            <span>Owner Finance</span>
+                        </fieldset>
+                    </div>
+                    <div class="switch-col">
+                        <fieldset class="switch tiny">
+                            <input type="checkbox" id="foreclosure">
+                            <label for="foreclosure"></label>
+                            <span>Foreclosed</span>
+                        </fieldset>
+                    </div>
+                    <div class="apply-col"><button type="button" id="filter" class="button" aria-label="Apply Filters"><span>Apply Filters</span></button></div>
+                    <div class="reset-col"><button type="button" id="reset-filter" class="button reset" aria-label="Reset">Reset</button></div>
+                </div>
+            </div>
+ </section>
+
+    
+    <footer class="footer bg-light">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-6 my-auto h-100 text-center text-lg-left">
+                    <ul class="list-inline mb-2">
+                        <li class="list-inline-item"><a href="#">About</a></li>
+                        <li class="list-inline-item"><span>⋅</span></li>
+                        <li class="list-inline-item"><a href="#">Contact</a></li>
+                        <li class="list-inline-item"><span>⋅</span></li>
+                        <li class="list-inline-item"><a href="#">Terms of &nbsp;Use</a></li>
+                        <li class="list-inline-item"><span>⋅</span></li>
+                        <li class="list-inline-item"><a href="#">Privacy Policy</a></li>
+                    </ul>
+                    <p class="text-muted small mb-4 mb-lg-0">© Brand 2018. All Rights Reserved.</p>
+                </div>
+                <div class="col-lg-6 my-auto h-100 text-center text-lg-right">
+                    <ul class="list-inline mb-0">
+                        <li class="list-inline-item"><a href="#"><i class="fa fa-facebook fa-2x fa-fw"></i></a></li>
+                        <li class="list-inline-item"><a href="#"><i class="fa fa-twitter fa-2x fa-fw"></i></a></li>
+                        <li class="list-inline-item"><a href="#"><i class="fa fa-instagram fa-2x fa-fw"></i></a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </footer>
+    <script src="{% static 'assets/js/jquery.min.js' %}"></script>
+    <script src="{% static 'assets/bootstrap/js/bootstrap.min.js' %}"></script>
+    <script src="{% static 'assets/js/bs-animation.js' %}"></script>
+    <script src="{% static "assets/js/Contact-FormModal-Contact-Form-with-Google-Map.js" %}"></script>
+
+    <script type="text/javascript">
+        function myMap() {
+            var mapProp = {
+                center: new google.maps.LatLng(28.508472, -90.120850),
+                zoom: 5, 
+            };
+            var map = new google.maps.Map(document.getElementById("googleMap"),mapProp); 
+
+        }
+
+
+    </script>
+
+    <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDc22y7izUaUzZo0ywflT3iPgGmrGvTr-o&callback=myMap"></script>
+</body>
+
+</html>

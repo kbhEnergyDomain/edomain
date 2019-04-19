@@ -1,0 +1,33 @@
+<!-- templates/registration/login.html -->
+{% extends 'base.html' %}
+
+{% block content %}
+
+    <section class="bg-light">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-2"></div>
+                <div class="col-lg-4">
+                <p>You are not logged in </p>
+                <h2>Login</h2>
+                <form method="post">
+                  {% csrf_token %}
+                  {{ form.as_p }}
+                  <button type="submit">Login</button>
+                </form>
+
+                kamran husain logged in ....
+                <a href="{% url 'users:login' %}">login</a>
+                </div>
+            <div class="col-lg-4">
+
+                Kamran Husain
+                The box with sign up information goes here.
+
+            </div>
+            <div class="col-lg-2"></div>
+            </div>
+        </div>
+    </section>
+
+{% endblock %}

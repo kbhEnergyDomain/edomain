@@ -1,0 +1,148 @@
+.defaultListTable {
+  font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
+  border-collapse: collapse;
+  width: 100%;
+}
+
+.defaultListTable td, .defaultListTable th {
+  border: 1px solid #ddd;
+  padding: 8px;
+}
+
+
+
+div.ed_frame {
+  
+  border: 2 solid #ddd;
+  padding: 10px; 
+  box-shadow: #333; 
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+  font-size: 12px;
+}
+
+.ed_frame h3 { 
+ 
+  color: #535353;
+  background-color: #D8D8D8;
+  font-family: 'Roboto';
+  border: 1 solid blue;
+  text-align: center;
+  padding: 3px;
+}
+
+.ed.p { 
+
+ }
+
+.defaultListTable tr:nth-child(even){background-color: #f2f2f2;}
+
+.defaultListTable tr:hover {background-color: #ddd;}
+
+.defaultListTable th {
+  padding-top: 12px;
+  padding-bottom: 12px;
+  text-align: center;
+  background-image: linear-gradient(white,gray);
+  color: #039be5;
+
+}
+
+.ed_logotext { 
+  font-family: 'Eagle Lake';
+  font-size: 32px;
+  padding-left: 10px; 
+  padding-right: 10px;
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+  
+}
+
+
+p > label { 
+  text-align: right; 
+  width: 30%;
+  color: white;
+  background:  #212529;
+
+  padding-right: 0.5em;
+}
+
+.formInput { 
+
+
+ }
+
+
+h1,h2,h3 { 
+  font-family: 'Eagle Lake';
+}
+
+
+/*div.imgcard {
+  width: 250px;
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+  text-align: center;
+}
+*/
+section.call-to-action { 
+  margin-top: 2rem;
+ }
+
+.nav-item { 
+  color: #535353;
+  background: #100c56;
+}
+ 
+
+ #viewDiv {
+      padding: 0;
+      margin: 0;
+      height: 500px;
+      width: 100%;
+  }
+
+.figure img { 
+  border: 1px solid #666; 
+  background-color: white;
+  padding: 4px; 
+  box-shadow: 5px 5px #666;
+
+}
+
+.figure p { 
+  font: 1.1em/normal Arial; 
+  text-align: center; 
+  margin: 10px 0 0 0 ;
+  height: 3em; 
+  padding: 5px;
+}
+
+
+.ed_menubutton {
+  background: #039be5;
+  padding: 20px;
+  font-size: 18px;
+  color: white;
+  border: 1px;
+  border-radius: 300px;
+  display: block;
+  margin: auto;
+  margin-top: 50px;
+  padding-top: 10px;
+  padding-bottom: 10px;
+  margin-bottom: 50px;
+}
+
+
+.ed_menubutton:hover {
+  background-color: #3e8e41;
+  color: yellow;
+  box-shadow: 0 5px #666;
+}
+
+.ed_menubutton:active {
+  background-color: #3e8e41;
+  color: yellow;
+  box-shadow: 0 5px #666;
+  transform: translateY(4px);
+}
+

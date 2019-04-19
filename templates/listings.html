@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+
+{% block content %}
+{% if user.is_authenticated %}
+<div class="row">
+
+<!--     <div class="col-lg-4"> -->
+
+        <table class="defaultListTable" border="1"> 
+        <tr><th>ID</th>
+        	<th>Acres</th>
+        	<th>Legal</th>
+        	<th>County</th>
+            <th>RU</th>
+            </tr>
+        {% for tract in listings %}
+            <tr><td>{{tract.ID}}</td>
+            	<td>{{tract.acres}}</td>
+            	<td>{{tract.legal}}</td>
+            	<td>{{tract.county}}</td>
+                <td><a href="{% url 'details' tract.ID %}"  >{{tract.ID}}</a></td>
+            </tr>
+        {% endfor %}
+        </table>
+<!--     </div>
+ -->
+</div>
+{% endif %}
+{% endblock %}

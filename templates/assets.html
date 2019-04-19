@@ -1,0 +1,47 @@
+{% extends 'base.html' %}
+{% csrf_token %}
+{% block content %}
+
+{% if user.is_authenticated %}
+ 
+
+
+<div class="row">
+    <div class="col-lg-2"></div>
+    <div class="col-lg-8">
+        <h3>Assets  </h3>
+        <p>
+        Owners should be filtered here to show only their current holdings. 
+        The details button should lead them to another screen that shows more pertinent details about the holding in a separate page. 
+        <p>
+        <table class="table table-striped table-bordered" > 
+        <tr><th>Owner</th>
+            <th>Operator</th>
+            <th>Type of Interest</th>                
+            <th>Items</th>
+            <th>Details</th>
+        </tr>
+        {% for owner in listings %}
+            <tr>
+                <td>{{owner.owner_name}}</td>
+                <td>{{owner.operator_name}}</td>
+                <td>{{owner.interest_type}}</td>                
+                <td>{{owner.total}}</td>
+                
+                <td><a href="{% url 'details' owner.owner_name %}"  >More...</a></td>
+<!--                 <td><a href="http://google.com" class="btn btn-default">Go to Google</a>
+                </td>
+                <td>
+                <input type="button" onclick="location.href='{% url "details" owner.owner_name %}';" value="MMore" /></td> -->
+            </tr>
+        {% endfor %}
+        </table>
+    </div>
+    <div class="col-lg-2"></div>
+</div>
+
+
+{% endif %}
+                
+
+{% endblock %}

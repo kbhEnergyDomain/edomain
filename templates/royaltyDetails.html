@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="row">
+    <div class="col-lg-4"></div>
+    <div class="col-lg-4">
+        <h3>Assets available </h3>
+        {{ object_list }}
+        <table border="1"> 
+        {% for well in allwells %}
+
+            <tr><td>{{well.well_api}}</td><td>{{well.well_latt}}</td><td>{{well.well_long}}</td></tr>
+        {% endfor %}
+        </table>
+    </div>
+    <div class="col-lg-4"></div>
+</div>
+{% endblock %}

@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html>
+{% load static %}
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
+    <title>Energy Domains</title>
+    <link rel="stylesheet" href="{% static "assets/bootstrap/css/bootstrap.min.css" %}" >
+    <link rel="stylesheet" href="{% static "assets/css/Good-login-dropdown-menu.css" %}">
+    <link rel="stylesheet" href="{% static "assets/css/Navigation-Clean.css" %}">
+    <link rel="stylesheet" href="{% static "assets/css/Navigation-Menu.css" %}">
+    <!-- <link rel="stylesheet" href="{% static "assets/fonts/font-awesome.min.css" %}"> -->
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css" integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato:300,400,700,300italic,400italic,700italic">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Cookie">
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+    <link href='https://fonts.googleapis.com/css?family=Sofia' rel='stylesheet'>
+    <link href='https://fonts.googleapis.com/css?family=Roboto' rel='stylesheet'>
+    <link href='https://fonts.googleapis.com/css?family=Eagle Lake' rel='stylesheet'>
+    <link rel="stylesheet" href="{% static "assets/css/Contact-FormModal-Contact-Form-with-Google-Map.css" %}">
+    <link rel="stylesheet" href="{% static "assets/css/myStyle.css" %}">
+
+    {% block extrahead %}
+    {% endblock %}
+</head>
+
+<body>
+
+    <div>
+        <nav class="navbar navbar-light navbar-expand-md navigation-clean" >
+            <div class="container"><a class="navbar-brand" href="{% url 'home' %}"><img src="{% static "assets/img/ed_logo.png"  %}"></img></a><button class="navbar-toggler" data-toggle="collapse" data-target="#navcol-1"><span class="sr-only">Toggle navigation</span><span class="navbar-toggler-icon"></span></button>                  
+
+                <div
+                    class="collapse navbar-collapse" id="navcol-1" >
+                    <!-- <a  sref="{% url 'forsale' %}"  style="color: white;">Buyer</a> -->
+                    <ul class="nav navbar-nav ml-auto">
+                        <li class="nav-item"><a class="nav-link  external" href="{%v url 'customer_new' %}" >{{user.username}}</a></li>
+                         <li class="nav-item" role="presentation"><a class="nav-link  external" href="{% url 'sellers' %}" >Seller</a></li>
+                        <li class="nav-item" ><a class="nav-link" href="{% url 'buyers' %}">Buyer</a></li>
+                       <li class="nav-item" ><a class="nav-link" href="{% url 'brokers' %}">Broker</a></li>
+                        <li class="nav-item" ><a class="nav-link" href="{% url 'maps' %}">Maps</a></li>
+                       
+                        <li class="nav-item" role="presentation"><a class="nav-link" href="{% url 'listings' %}" >Listings</a></li>
+
+<!--   <li class="nav-item" role="presentation"><a class="nav-link" href="#" style="color: rgb(123,123,250);">Sign in</a></li> -->
+                        <li class="dropdown nav-item"><a class="dropdown-toggle nav-link" data-toggle="dropdown" aria-expanded="false" href="#" style="color: white;">More</a>
+                            <div class="dropdown-menu" role="menu">
+
+                                {% block login_content %}
+                                    {% if user.is_authenticated %}
+                            <!--     <a class="ed_menubutton" href="{% url 'listings' %}">Listings</a>
+                                        <a class="ed_menubutton" href="{% url 'reports' %}">Reports</a> -->
+                                        <!-- <a class="ed_menubutton" href="{% url 'logout' %}">{{ user.username }}/logout</a> -->
+                                <a class="dropdown-item" role="presentation" href="{% url 'home' %}">Dashboard</a>
+                                <a class="dropdown-item" role="presentation" href="{% url 'customer_new' %}">Profile</a>
+                                <a class="dropdown-item" role="presentation" href="{% url 'dblistings_new' %}">New Listing</a>
+                                <a class="dropdown-item" role="presentation" href="http://www.mineralware.com" target="_blank">Mineral Ware</a>
+
+                                
+                                <a class="dropdown-item" role="presentation" href="{% url 'logout' %}">Logout({{user.username}})</a>
+                                {% else %}
+       <!-- <a class="ed_menubutton" href="{% url 'login' %}">login</a> -->
+                                <a class="dropdown-item" role="presentation" href="{% url 'login' %}">Login</a>
+                                <a class="dropdown-item" role="presentation" href="{% url 'users:signup' %}">Sign up</a>
+
+                                {% endif %}
+                                {% endblock %}
+
+
+                                <a class="dropdown-item" role="presentation" href="#"></a>
+                                 
+                                <a class="dropdown-item" role="presentation" href="#">Contact Us</a></div>
+                        </li>
+                    </ul>
+            </div>
+    </div>
+    </nav>
+    </div>
+
+{% block login_section_content %}
+{% endblock %}
+
+    <section class="bg-light">
+        <div class="container ed_card">
+                    {% block esrimapsarea %}
+
+                    {% endblock %}
+
+
+            <div class="row">
+                <div class="col-lg-4">
+                    {% block welllocations %}
+
+                    {% endblock %}
+                </div>
+                <div class="col-lg-8">
+
+                     {% block mapsarea %}
+
+                    {% endblock %}
+
+                </div>
+            </div>
+        </div>
+    </section>
+
+
+    <section class="showcase">
+        <div class="container-fluid p-0">
+              <div class="row">
+                <div class="col-lg-2"></div>
+                <!--
+                    <img src="static/assets/img/Unnamed%20Project.gif">
+                    </div> -->
+                    <div class="col-lg-8">
+                        {% block content %}
+                        {% endblock %}
+                    </div>
+                    <div class="col-lg-2"></div>
+                </div>
+        </div>
+    </section>
+    
+
+ <!--    <section class="call-to-action text-white text-center">
+      
+        <div class="container">
+            <div class="row">
+                <div class="col-xl-9 mx-auto">
+                    <h2 class="mb-4">Ready to get started? Sign up now!</h2>
+                </div>
+                <div class="col-md-10 col-lg-8 col-xl-7 mx-auto">
+                    <form>
+                        <div class="form-row">
+                            <div class="col-12 col-md-9 mb-2 mb-md-0"><input class="form-control form-control-lg" type="email" placeholder="Enter your email..."></div>
+                            <div class="col-12 col-md-3"><button class="btn btn-primary btn-block btn-lg" type="submit">Sign up!</button></div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section> -->
+    <footer class="footer bg-light">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-6 my-auto h-100 text-center text-lg-left">
+                    <ul class="list-inline mb-2">
+                        <li class="list-inline-item"><a href="#">About</a></li>
+                        <li class="list-inline-item"><span>⋅</span></li>
+                        <li class="list-inline-item"><a href="#">Contact</a></li>
+                        <li class="list-inline-item"><span>⋅</span></li>
+                        <li class="list-inline-item"><a href="#">Terms of &nbsp;Use</a></li>
+                        <li class="list-inline-item"><span>⋅</span></li>
+                        <li class="list-inline-item"><a href="#">Privacy Policy</a></li>
+                    </ul>
+                    <p class="text-muted small mb-4 mb-lg-0">Energy Domain 2019. All Rights Reserved.</p>
+                </div>
+                <div class="col-lg-6 my-auto h-100 text-center text-lg-right">
+                    <ul class="list-inline mb-0">
+                        <li class="list-inline-item"><a href="#"><i class="fa fa-facebook fa-2x fa-fw"></i></a></li>
+                        <li class="list-inline-item"><a href="#"><i class="fa fa-twitter fa-2x fa-fw"></i></a></li>
+                        <li class="list-inline-item"><a href="#"><i class="fa fa-instagram fa-2x fa-fw"></i></a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </footer>
+    <!-- <script src="static/assets/js/jquery.min.js"></script> -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+   
+    <script src="{% static "assets/bootstrap/js/bootstrap.min.js" %}"></script>
+    <script src="{% static "assets/js/Contact-FormModal-Contact-Form-with-Google-Map.js" %}">
+  
+    </script>
+
+
+    </script>
+{% block scriptsforblock %}
+{% endblock %}
+
+
+
+
+</body>
+
+</html>

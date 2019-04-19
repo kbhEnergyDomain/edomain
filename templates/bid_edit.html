@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+
+{% block content %}
+{% if user.is_authenticated %}
+<section class="bg-light">
+    <div class="container ed_card">
+        <div class="row">
+            <div class="col-lg-2"></div>
+            <div class="col-lg-8">
+                <br>
+                <form method="POST" class="customer-form">{% csrf_token %}
+                      <h2> Edit Bid ({{ form.pk }}) </h2>
+                      <br>
+                         <p>
+                        <input id="id_user" type="text" disabled="True" value="{{ user.username}}">
+                    </p>
+                    {{ form.as_p }}
+                    <button type="submit" class="btn-primary">Save</button>
+                    {{ saved }}
+
+                </form>
+            </div>
+        </div>
+    </div>
+</section>
+{% endif %}
+{% endblock %}

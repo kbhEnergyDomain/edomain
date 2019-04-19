@@ -1,0 +1,26 @@
+notes.txt
+<a class="nav-link" href="{% url 'royalties_edit' pk=payment.rid  %}"><i class="fa fa-edit"> </a></i>
+def royalties_new(request):
+	try: 
+		myroyalty = Royalties.objects.get(user_name=request.user.username)
+	except:
+		myroyalty = None
+
+	if request.method == 'POST':
+		form =  RoyaltiesForm(request.POST, instance = myroyalty)
+		if form.is_valid():
+			#user = form.save(commit=False)
+			#form = CustomerForm(instance=myuser[0])
+			form.save() 
+			print("Collected ...", request.user.username, request.POST)
+			#myuser.save()
+			return render(request, 'royalties_edit.html', {'form': form , 'saved' : 'saved'})
+	else: 
+		if myroyalty: 
+			form =  RoyaltiesForm(instance=myroyalty)
+		else: 
+			form = RoyaltiesForm()
+
+
+	return render(request, 'royalties_edit.html', {'form': form , 'saved' : '....'})
+

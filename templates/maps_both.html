@@ -1,0 +1,156 @@
+{% extends 'base.html' %}
+{% block welllocations %}
+                 
+{% if user.is_authenticated %}
+
+        <table class="defaultListTable" border="1"> 
+        <tr>
+          <th>Well</th>
+          <th>Latt</th>
+          <th>Long</th>
+          
+            </tr>
+        {% for well in shortlist %}
+            <tr> 
+              <td>{{well.well_api}}</td>
+              <td>{{well.well_latt}}</td>
+              <td>{{well.well_long}}</td>
+              
+            </tr>
+        {% endfor %}
+        </table>
+{% endif %}
+{% endblock %}
+
+
+{% block mapsarea %}
+{% if user.is_authenticated %}     
+
+    <div id="mmap" style="width:100%;height:90%;">></div>
+
+
+
+
+{% endif %}
+
+{% endblock %}
+
+
+{% block scriptsforblock %}
+{% if user.is_authenticated %}
+    <script>
+
+      function initMap() {
+        var myLatLng = {lat: {{centerY}}, lng:  {{centerX}} };
+
+        var map = new google.maps.Map(document.getElementById('mmap'), {
+          zoom: 8,
+          center: myLatLng
+        });
+
+        var iconBase =
+            'https://developers.google.com/maps/documentation/javascript/examples/full/images/';
+        var image = 'https://developers.google.com/maps/documentation/javascript/examples/full/images/beachflag.png';
+  
+        var icons = {
+          parking: {
+            icon: iconBase + 'parking_lot_maps.png'
+          },
+          library: {
+            icon: iconBase + 'library_maps.png'
+          },
+          info: {
+            icon: iconBase + 'info-i_maps.png'
+          }
+        };
+
+      {% for well in allwells %}
+    
+        var mcoor = {lat: {{well.well_latt}}, lng: {{well.well_long}} };
+        var marker = new google.maps.Marker({
+          position: mcoor,
+          map: map,
+          icon: image, 
+          title: '{{well.well_api}}'
+        });
+      {% endfor %}
+
+      console.log("Helloo.....", map, mcoor,marker);
+  
+      }
+    </script>
+    <script async defer
+    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCanm8FcRzWfXp50T2a4HObqpAFxuCr0YQ&callback=initMap">
+    //kamran AIzaSyDc22y7izUaUzZo0ywflT3iPgGmrGvTr-o
+    // AIzaSyCanm8FcRzWfXp50T2a4HObqpAFxuCr0YQ
+    </script>
+
+    <link rel="stylesheet" href="https://js.arcgis.com/4.11/esri/css/main.css">
+    <script src="https://js.arcgis.com/4.11/"></script>
+
+
+
+<script>  
+    require([
+      "esri/Map",
+            "esri/views/MapView",
+      "esri/Graphic",
+      "esri/geometry/Point",
+      "esri/symbols/SimpleMarkerSymbol",
+    ], function(Map, MapView,Graphic, Point, SimpleMarkerSymbol) {
+
+      var map = new Map({
+        basemap: "topo-vector"
+      });
+      
+      var view = new MapView({
+        container: "viewDiv",
+        map: map,
+        center: [-98.71511,29.09042],
+        zoom: 11
+      });
+      var myLatLng = {lat: {{centerY}}, lng:  {{centerX}} };
+      var markerSymbol = new SimpleMarkerSymbol({
+          color: [226, 119, 40],
+          outline: {
+            color: [255, 255, 255],
+            width: 1
+          }
+      });
+      {% for well in allwells %}
+    
+          var point = new Point({
+            longitude: {{well.well_long}},
+            latitude:  {{well.well_latt}}
+          });
+
+            var attributes = {
+                  Name: "{{well.well_api}}",
+                  yLatt: "{{well.well_long}}",
+                  xLong: "{{well.well_latt}}"
+                };
+
+          var popupTemplate = {
+            title: "{Name}",
+            content: "Latt: <b>{yLatt}</b> Long <b>{xLong}</b>."
+          };
+
+           var pointGraphic = new Graphic({
+            geometry: point,
+            symbol: markerSymbol,
+            //*** ADD ***//
+            attributes: attributes,
+            popupTemplate: popupTemplate
+          });
+
+  // Add the graphic to the view
+          view.graphics.add(pointGraphic);
+      {% endfor %}
+
+
+    });
+  </script>
+
+{% endif %}
+
+{% endblock %}

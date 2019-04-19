@@ -1,0 +1,251 @@
+{% extends 'base.html' %}
+{% block welllocations %}
+                 
+{% if user.is_authenticated %}
+<!--         <table class="defaultListTable" border="1"> 
+        <tr>
+          <th>Well</th>
+          <th>Latt</th>
+          <th>Long</th>
+          
+            </tr>
+        {% for well in shortlist %}
+            <tr> 
+              <td>{{well.well_api}}</td>
+              <td>{{well.well_latt}}</td>
+              <td>{{well.well_long}}</td>
+              
+            </tr>
+        {% endfor %}
+        </table> -->
+{% endif %}
+{% endblock %}
+
+
+{% block mapsarea %}
+{% if user.is_authenticated %}     
+    <!-- <div id="mmap" style="width:100%;height:90%;">></div> -->
+  <!--   <style>.embed-container {position: relative; padding-bottom: 80%; height: 0; max-width: 100%;} .embed-container iframe, .embed-container object, .embed-container iframe{position: absolute; top: 0; left: 0; width: 100%; height: 100%;} small{position: absolute; z-index: 40; bottom: 0; margin-bottom: -15px;}</style><div class="embed-container"><small><a href="//kbhusain.maps.arcgis.com/apps/Embed/index.html?webmap=eac43b9901604ddb8379da1ba009b12e&extent=-147.1411,10.4463,-48.4399,58.5176&zoom=true&scale=true&disable_scroll=false&theme=light" style="color:#0000FF;text-align:left" target="_blank">View larger map</a></small><br><iframe width="500" height="400" frameborder="0" scrolling="no" marginheight="0" marginwidth="0" title="ShaleBasins" src="//kbhusain.maps.arcgis.com/apps/Embed/index.html?webmap=eac43b9901604ddb8379da1ba009b12e&extent=-147.1411,10.4463,-48.4399,58.5176&zoom=true&previewImage=false&scale=true&disable_scroll=false&theme=light"></iframe></div>
+ -->
+
+<style>.embed-container {position: relative; padding-bottom: 80%; height: 0; max-width: 100%;} .embed-container iframe, .embed-container object, .embed-container iframe{position: absolute; top: 0; left: 0; width: 100%; height: 100%;} small{position: absolute; z-index: 40; bottom: 0; margin-bottom: -15px;}</style><div class="embed-container"><small><a href="//kbhusain.maps.arcgis.com/apps/Embed/index.html?webmap=eac43b9901604ddb8379da1ba009b12e&extent=-162.6977,14.0531,-32.8833,65.2391&zoom=true&scale=true&details=true&legend=true&active_panel=details&disable_scroll=true&theme=light" style="color:#0000FF;text-align:left" target="_blank">View larger map</a></small><br><iframe width="500" height="400" frameborder="0" scrolling="no" marginheight="0" marginwidth="0" title="ShaleBasins" src="//kbhusain.maps.arcgis.com/apps/Embed/index.html?webmap=eac43b9901604ddb8379da1ba009b12e&extent=-162.6977,14.0531,-32.8833,65.2391&zoom=true&previewImage=false&scale=true&details=true&legend=true&active_panel=details&disable_scroll=true&theme=light"></iframe></div>
+{% endif %}
+Maps area
+{% endblock %}
+
+
+
+{% block esrimapsarea %}
+{% if user.is_authenticated %}     
+              <div class="row">
+                <div class="col-lg-12">
+                    <div id="viewDiv"></div>
+                </div>
+            </div>
+
+<input type="file" id="files" name="files[]"  />
+<output id="list"></output>
+<div id="byte_content"></div>
+
+
+{% endif %}
+{% endblock %}
+
+
+
+
+{% block scriptsforblock %}
+{% if user.is_authenticated %}
+
+
+
+
+    <link rel="stylesheet" href="https://js.arcgis.com/4.11/esri/css/main.css">
+    <script src="https://js.arcgis.com/4.11/"></script>
+
+
+
+<script>  
+    var globalMap = null; 
+    var globalView = null; 
+    var wellPoints = []; 
+    {% for well in allwells %}
+    wellPoints.push( { 
+                'longitude': {{well.well_long}},
+                'latitude':  {{well.well_latt}},
+                'name'    :  "{{well.well_api}}",
+                'symbol'  :  'base'
+              });
+
+    {% endfor %}
+
+
+   require([
+      "esri/Map",
+      "esri/views/MapView",
+      "esri/Graphic",
+      "esri/geometry/Point",
+      "esri/symbols/SimpleMarkerSymbol",
+    ], function(Map, MapView,Graphic, Point, SimpleMarkerSymbol) {
+
+      makeMap();
+
+
+
+
+
+     function makeMap() {
+      var map = new Map({
+        basemap: "topo-vector"
+      });
+      globalMap = map;
+      var view = new MapView({
+        container: "viewDiv",
+        map: map,
+        center: [-98.71511,29.09042],
+        zoom: 11
+      });
+      globalView = view 
+
+
+      var myLatLng = {lat: {{centerY}}, lng:  {{centerX}} };
+      var markerSymbol = new SimpleMarkerSymbol({
+          color: [226, 119, 40],
+          outline: {
+            color: [255, 255, 255],
+            width: 1
+          }
+      });
+
+      var new_markerSymbol = new SimpleMarkerSymbol({
+          color: [16, 210, 240],
+          outline: {
+            color: [255, 255, 255],
+            width: 3
+          }
+      });
+
+      for (wctr in wellPoints) { 
+          well = wellPoints[wctr]
+          console.log(well)
+          var point = new Point({
+            longitude: well['longitude'],
+            latitude:  well['latitude']
+          });
+          console.log("Point...", point)
+          var attributes = {
+                  Name:  well['name'],
+                  yLatt: well['latitude'],
+                  xLong: well['longitude']
+                };
+
+          var popupTemplate = {
+            title: "{Name}",
+            content: "Latt: <b>{yLatt}</b> Long <b>{xLong}</b>."
+          };
+
+          var symbol = markerSymbol
+          if (well['symbol'] != 'base') {
+            symbol = new_markerSymbol
+          }
+
+
+           var pointGraphic = new Graphic({
+            geometry: point,
+            symbol: symbol,
+            //*** ADD ***//
+            attributes: attributes,
+            popupTemplate: popupTemplate
+          });
+
+  // Add the graphic to the view
+          view.graphics.add(pointGraphic);
+      }
+
+    }
+
+ 
+
+    function handleFileSelect(evt) {
+    var files = evt.target.files; // FileList object
+
+    // files is a FileList of File objects. List some properties.
+    var output = [];
+    for (var i = 0, f; file = files[i]; i++) {
+
+
+
+      var reader = new FileReader();
+      reader.onloadend = function(evt) {
+      if (evt.target.readyState == FileReader.DONE) { // DONE == 2
+        document.getElementById('byte_content').textContent = evt.target.result;
+
+
+
+        var lines = evt.target.result.split('\n').slice(1,);
+        for (var xln in lines) 
+        {
+            var pta = lines[xln].split(',')
+            
+            var well_api  = pta[0]
+            var well_latt = parseFloat(pta[2])
+            var well_long = parseFloat(pta[1])
+
+
+            wellPoints.push( { 
+                'longitude': well_long,
+                'latitude':  well_latt,
+                'name'    :  well_api,
+                'symbol'  :  'imported'
+              });
+
+          //   var point = new Point({
+          //         longitude: parseFloat(well_long),
+          //         latitude:  parseFloat(well_latt)
+          //         });
+          //   console.log("Added", point)
+          //   var attributes = {
+          //         Name:  well_api,
+          //         yLatt: well_long,
+          //         xLong: well_latt
+          //       };
+          
+          // var popupTemplate = {
+          //   title: "{Name}",
+          //   content: "Latt: <b>{yLatt}</b> Long <b>{xLong}</b>."
+          // };
+
+          //  var pointGraphic = new Graphic({
+          //   geometry: point,
+          //   symbol: new_markerSymbol,
+          //   attributes: attributes,
+          //   popupTemplate: popupTemplate
+          // });
+
+          // console.log("added ... graphic ", pointGraphic)
+          // globalView.graphics.add(pointGraphic);  
+          //view.graphics.add(pointGraphic);           
+
+        }
+        console.log(globalMap.layers) 
+        makeMap()
+        }
+      };
+
+
+      reader.readAsText(file);   
+    }
+    document.getElementById('list').innerHTML = '<ul>' + output.join('') + '</ul>';
+  }
+  document.getElementById('files').addEventListener('change', handleFileSelect, false);
+
+
+    });
+
+
+  
+</script>
+
+{% endif %}
+
+{% endblock %}

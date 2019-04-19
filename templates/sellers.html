@@ -1,0 +1,69 @@
+{% extends 'base.html' %}
+{% csrf_token %}
+{% block content %}
+
+{% if user.is_authenticated %}
+ 
+
+
+<div class="row">
+    <div class="col-lg-2"></div>
+    <div class="col-lg-8">
+        <h3>Assets  </h3>
+        <p>
+        Owners should be filtered here to show only their current holdings. 
+        The details button should lead them to another screen that shows more pertinent details about the holding in a separate page. 
+        <p>
+        This is a landing page explaining what it means to sell on our platform 
+        </p>
+
+
+        <div class="figure"> 
+            <div class="landphoto">
+ 
+                    <img src="static/assets/img/Unnamed%20Project.gif" width="200" height="200">
+                    
+            </div>
+            <p> Information about this particular site. </p>
+
+        </div>
+
+        <div class="figure"> 
+            <div class="landphoto">
+ 
+                    <img src="static/assets/img/landsale.jpg" width="200" height="200">
+                    
+            </div>
+            <p> Information about this particular site. </p>
+
+        </div>
+        <div class="figure"> 
+            <div class="landphoto">
+ 
+                    <img src="static/assets/img/oil_pump.jpg" width="200" height="200">
+                    
+            </div>
+            <p> Information about this particular site. </p>
+
+        </div>
+        <div class="figure"> 
+            <div class="landphoto">
+ 
+                    <img src="static/assets/img/minerals.jpg" width="200" height="200">
+                    
+            </div>
+            <p> Information about this particular site. </p>
+
+        </div>
+
+
+
+    </div>
+    <div class="col-lg-2"></div>
+</div>
+
+
+{% endif %}
+                
+
+{% endblock %}

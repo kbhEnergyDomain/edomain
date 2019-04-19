@@ -1,0 +1,6 @@
+[client]
+host = localhost
+database = realestate
+user = kamran
+password = appDeveloper!
+default-character-set = utf8 
