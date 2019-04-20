@@ -34,7 +34,7 @@
                     class="collapse navbar-collapse" id="navcol-1" >
                     <!-- <a  sref="{% url 'forsale' %}"  style="color: white;">Buyer</a> -->
                     <ul class="nav navbar-nav ml-auto">
-                        <li class="nav-item"><a class="nav-link  external" href="{%v url 'customer_new' %}" >{{user.username}}</a></li>
+                        <li class="nav-item"><a class="nav-link  external" href="{% url 'customer_new'  %}" >{{user.username}}</a></li>
                          <li class="nav-item" role="presentation"><a class="nav-link  external" href="{% url 'sellers' %}" >Seller</a></li>
                         <li class="nav-item" ><a class="nav-link" href="{% url 'buyers' %}">Buyer</a></li>
                        <li class="nav-item" ><a class="nav-link" href="{% url 'brokers' %}">Broker</a></li>

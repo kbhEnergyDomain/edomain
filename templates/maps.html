@@ -34,12 +34,17 @@ Maps area
 {% endblock %}
 
 
-
 {% block esrimapsarea %}
 {% if user.is_authenticated %}     
               <div class="row">
                 <div class="col-lg-12">
-                    <div id="viewDiv"></div>
+                    <div id="viewDiv">
+                      
+<input id="Addlyr" type="button" value = "Add Layer" style="position: absolute; z-index: 1000; left: 100px; float: right;" />
+
+
+                    </div>
+                          
                 </div>
             </div>
 
