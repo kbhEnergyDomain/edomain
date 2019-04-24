@@ -4,8 +4,7 @@ from django.http import HttpResponse, JsonResponse, HttpResponseRedirect
 from django.views.generic import TemplateView , DeleteView
 from django.db.models import Count
 # Create your views here.
-from edlm.models import Wells, Customer, Assetinformation, Ownership, Assettype 
-from edlm.models import Tractstable, Leasestable, Royalties, Bid
+from edlm.models import *
 from chartjs.views.lines import BaseLineChartView
 from .forms import CustomerForm, CustomerFields, BidForm, RoyaltiesForm, DblistingsForm	
 from django.views.decorators.csrf import csrf_exempt
@@ -63,47 +62,78 @@ def dblistings_new(request):
 		form = DblistingsForm(); 
 	return render(request, 'dblistings_edit.html', {'form': form , 'saved' : '....'})
 
-
+# This is called to create a new listing
 def dblistings_edit(request, pk=None):
-	print("Request to list asset ID = ", pk)
-	try:
-		asset =  Assetinformation.objects.get(rid=pk) 
-	except: 
-		asset = None
+	print("Request to list dblisting.... ID = ", pk)
 
-	whoami = Customer.objects.get(user_name=self.request.user)
-	oid    = whoami.cust_id	 
+	whoami = Customer.objects.get(user_name=request.user)
+	cid    = whoami.cust_id	 
 
-	# Ownership record --- pk
-	
+	owner_info = Ownership.objects.get(owner_id=pk)
 
-	owner_info = Ownership.objects.get(aid=pk)
-	print("Customer	ID", owner_info.cid)
+
+	# try:
+	# 	asset =  Assetinformation.objects.get(rid=owner_info.) 
+	# except: 
+	# 	asset = None
+
+
+	# print("Customer	ID", owner_info.cid)
 	cust = owner_info.cid; 
 	owner_str = "%s %s" % (cust.cust_fname, cust.cust_lname)
-	asset = owner_info.aid
-	asset_str = "%d - " % asset.asset_no
+	item = owner_info.aid
+	item_str = "%d - " % item.asset_no
 	print("Owner ", owner_str)
-	print("Asset Info", asset_str)
-	if item: item.oid = owner_info
+	print("Asset Info", item_str)
+	purchase_str = owner_info.puch_date.strftime("%Y-%m-%d")
+	form = DblistingsForm()
+	return render(request, 'dblistings_edit.html', {'form': form , 
+						'owner' : owner_str, 'asset' : item_str, 
+						'saved' : '....'})
+
+# This is called to edit a listing. 
+def dblistings_new(request, pk=None):
+	print("pk == ", pk )
+	try:
+		owner_info = Ownership.objects.get(owner_id=pk)
+	except: 
+		owner_info = None
+
+	if owner_info: 
+		cust = owner_info.cid; 
+		owner_str = "%s %s" % (cust.cust_fname, cust.cust_lname)
+		item = owner_info.aid
+		item_str = "%d - " % item.asset_no
+
+		purchase_str = owner_info.puch_date.strftime("%Y-%m-%d")
+	else: 
+		owner_str = "Line 112... dblistings_edit"
+		item_str  = "dblistings_edit ... not found"
+		purchase_str = "dblistings_edit ... not set."
+
+	print("Owner ", owner_str)
+	print("Asset Info", item_str)
+
 	if request.method == 'POST':
-		form = DblistingsForm(request.POST, instance=item)
+		form = DblistingsForm(request.POST)
 		if form.is_valid():
 			print(form)
 			form.save() 
 		return render(request, 'dblistings_edit.html', {'form': form , 
-					'owner' : owner_str, 'asset' : asset_str, 
+					'owner' : owner_str, 'asset' : item_str, 'puch_date' : purchase_str, 
 					'saved' : 'saved'})
 	else:
-		if not item:
+		try:
+			mylisting = Dblistings.objects.get(oid=pk)
+		except:
+			mylisting = None
+		if not mylisting:
 			form = DblistingsForm()
 		else:
-			form = DblistingsForm(instance=item)
+			form = DblistingsForm(instance=mylisting)
 	return render(request, 'dblistings_edit.html', {'form': form , 
-						'owner' : owner_str, 'asset' : asset_str, 
+						'owner' : owner_str, 'asset' : item_str,  'puch_date' : purchase_str, 
 						'saved' : '....'})
-
-
 
 def bid_new(request):
 	#mybid = Bid.objects.get()
@@ -200,7 +230,7 @@ class homePageView(TemplateView):
 	#return HttpResponse("Hello World")
 	template_name = 'index.html'
 
-	def getAssetTabData(self):
+	def getOwnershipData(self):
 		listings = [] 
 		# From ownership 
 		try:
@@ -217,7 +247,9 @@ class homePageView(TemplateView):
 			otype = Assettype.objects.get(asset_type_id=stuff.aid.atype)
 			
 			item = { 'AID': stuff.aid.asset_id, 
-					'Atype': otype.asset_name, 'WELL' : stuff.aid.well_id } 
+					 'cid' : stuff.cid.cust_id, 
+					'Atype': otype.asset_name, 
+					'WELL' : stuff.aid.well_id } 
 			listings.append(item)
 
 		return listings
@@ -255,7 +287,7 @@ class homePageView(TemplateView):
 		# customers = Customer.objects.all() 
 		# print(customers)
 
-		assetData = self.getAssetTabData(); 
+		ownedData = self.getOwnershipData(); 
 		bidData = self.getBidData(); 
 		paymentData = self.getPaymentData();
 
@@ -265,7 +297,7 @@ class homePageView(TemplateView):
 				{ 'id' : 'ID 3', 'where': 'Here',  'Amount': 1300.00 },
 				  ]
 
-		tabData['assets'] = assetData; 
+		tabData['owned'] = ownedData; 
 		tabData['bids'] =   bidData; 
 		tabData['listings'] = listingData; 
 		tabData['payments'] = paymentData; 

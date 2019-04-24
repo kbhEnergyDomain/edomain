@@ -254,7 +254,7 @@ class Ownership(models.Model):
     sold_date = models.DateField(blank=True, null=True)
 
     class Meta:
-        managed = False
+        managed = True
         db_table = 'ownership'
 
 
@@ -288,11 +288,12 @@ class Royalties(models.Model):
     tax_type_1 = models.CharField(db_column='Tax_Type_1', max_length=16, blank=True, null=True)  # Field name made lowercase.
     gross_tax_1 = models.FloatField(db_column='Gross_Tax_1', blank=True, null=True)  # Field name made lowercase.
     net_tax_1 = models.FloatField(db_column='Net_Tax_1', blank=True, null=True)  # Field name made lowercase.
-    document = models.CharField(db_column='Document', max_length=100, blank=True, null=True)  # Field name made lowercase.
-    user_name = models.CharField(max_length=32, blank=True, null=True)
+    document  = models.FileField(db_column='Document', blank=True, null=True)  # Field name made lowercase.
+    user_name = models.CharField(max_length=32, blank=True, null=True) # Field name made lowercase
+
 
     class Meta:
-        managed = False
+        managed = True
         db_table = 'royalties'
 
 
@@ -350,43 +351,6 @@ class Tractstable(models.Model):
     class Meta:
         managed = False
         db_table = 'tractstable'
-
-
-class UsersCustomuser(models.Model):
-    password = models.CharField(max_length=128)
-    last_login = models.DateTimeField(blank=True, null=True)
-    is_superuser = models.IntegerField()
-    username = models.CharField(unique=True, max_length=150)
-    first_name = models.CharField(max_length=30)
-    last_name = models.CharField(max_length=150)
-    email = models.CharField(max_length=254)
-    is_staff = models.IntegerField()
-    is_active = models.IntegerField()
-    date_joined = models.DateTimeField()
-
-    class Meta:
-        managed = False
-        db_table = 'users_customuser'
-
-
-class UsersCustomuserGroups(models.Model):
-    customuser = models.ForeignKey(UsersCustomuser, models.DO_NOTHING)
-    group = models.ForeignKey(AuthGroup, models.DO_NOTHING)
-
-    class Meta:
-        managed = False
-        db_table = 'users_customuser_groups'
-        unique_together = (('customuser', 'group'),)
-
-
-class UsersCustomuserUserPermissions(models.Model):
-    customuser = models.ForeignKey(UsersCustomuser, models.DO_NOTHING)
-    permission = models.ForeignKey(AuthPermission, models.DO_NOTHING)
-
-    class Meta:
-        managed = False
-        db_table = 'users_customuser_user_permissions'
-        unique_together = (('customuser', 'permission'),)
 
 
 class Welllocations(models.Model):

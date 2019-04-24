@@ -38,20 +38,21 @@
 					    <div id="collapseOne" class="collapse show" aria-labelledby="headingOne" data-parent="#collapsibleTabs">
 					      <div class="card-body">
 					        <table class="table table-striped table-bordered" border="1"> 
-								        	<tr>
-								        		<th>Item</th>
-								        		<th>Type</th>
-								        		<th>Link</th>
-								        		<th class="	">...</th>
-								            </tr>	
-											{% for asset in assets  %}
-								            <tr><td>{{asset.AID}}</td>
-								            	<td>{{asset.Atype}}</td>
-								            	<td>{{asset.WELL}}</td>
-								            	<td >
-								            	<a href="{% url 'dblistings_edit' asset.AID  %}"><i class="fa fa-bell"></i></a>
-								            	</td>
-								            </tr>
+
+
+											{% for own in owned  %}
+											<div class="card">
+												<h5 class="card-title">
+													Asset ID: {{own.AID}}
+												</h5>
+												<h6 class="card-subtitle">Identifier .. {{own.WELL}}</h6>
+
+								            	<p>Asset Type: {{own.Atype}}</p>
+
+								            	<a href="{% url 'dblistings_new' own.AID  %}" class="btn btn-primary">More...</a>
+
+								            </div>
+
 											{% endfor %}
 										</table>
 					      </div>

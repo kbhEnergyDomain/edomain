@@ -29,6 +29,7 @@ urlpatterns = [
 	path('dblistings/new/', views.dblistings_new, name='dblistings_new'),
 	path(r'dblistings/edit/', views.dblistings_edit, name='dblistings_edit'),
 	path(r'dblistings/edit/(?P<pk>\d+)/', views.dblistings_edit, name='dblistings_edit'),
+	path(r'dblistings/new/(?P<pk>\d+)/', views.dblistings_new, name='dblistings_new'),
 	path('getMWdata/', views.getMWdata, name='getMWdata'),
 	path('setMWdata/', views.setMWdata, name='setMWdata'),
 	path(r'royalties/edit/(?P<pk>\d+)/', views.royalties_edit, name='royalties_edit'),
