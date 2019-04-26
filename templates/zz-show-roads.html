@@ -1,0 +1,272 @@
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no">
+  <title>ddd</title>
+  <style>
+    html, body, #viewDiv {
+      /*padding: 0;*/
+      margin: 0;
+      height: 100%;
+      width: 100%;
+    }
+  </style>
+  <!-- <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css"> -->
+  <link rel="stylesheet" href="https://js.arcgis.com/4.11/esri/css/main.css">
+  <script src="https://js.arcgis.com/4.11/"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+
+</head>
+<body>
+    <input type='button' id="addLayer" value="Add somet" >  
+    <input class="btn btn-primary"  id="toggleMe"
+       type="button"
+       value="Add Another ">    
+       <input class="btn btn-primary"  id="clearMe"
+       type="button"
+       value="All Quakes">
+              <input class="btn btn-primary"  id="toggleQuake"
+       type="button"
+       value="Quake > 0.5">
+  <div id="viewDiv"></div>
+
+</body>
+  <script>  
+
+    var myMap = null;
+    var myView = null; 
+
+    require([
+      "esri/Map",
+      "esri/views/MapView",
+      "esri/tasks/support/Query",
+      "esri/tasks/QueryTask",
+      "esri/Graphic",
+      "esri/layers/FeatureLayer",
+      "esri/widgets/BasemapToggle",
+      "esri/widgets/BasemapGallery"
+    ], function(Map, MapView, Query, QueryTask, Graphic, FeatureLayer, 
+        BasemapToggle, BasemapGallery) {
+
+      var map = new Map({
+        basemap: "streets"
+      });
+      myMap = map; 
+      var view = new MapView({
+        container: "viewDiv",
+        map: map,
+        center: [-118.71511,34.09042],
+        zoom: 11,
+
+      });
+      
+      myView = view; 
+      var featureLayer = new FeatureLayer({
+        url: "https://services3.arcgis.com/GVgbJbqm8hXASVYi/arcgis/rest/services/Trailheads/FeatureServer/0"
+      });
+
+      map.add(featureLayer);
+//       var basemapToggle = new BasemapToggle({
+//         view: view,
+//         secondMap: "satellite"
+//       });
+      
+//       view.ui.add(basemapToggle,"bottom-right");
+      
+      var basemapGallery = new BasemapGallery({
+        view: view,
+        source: {
+          portal: {
+            url: "http://www.arcgis.com",
+            useVectorBasemaps: true, // Load vector tile basemap group
+          },
+        } 
+      });
+
+
+      view.ui.add(basemapGallery, "top-right"); // Add to the view
+
+
+
+      var query = new Query();
+      query.where = "TRL_NAME like '%s%'"
+      query.outFields = ["*"];
+      query.returnGeometry = true;
+
+      // Define the query task
+      var queryTask = new QueryTask({
+        url: "https://services3.arcgis.com/GVgbJbqm8hXASVYi/arcgis/rest/services/Trails/FeatureServer/0" 
+      });
+
+      // Execute the query
+      queryTask.execute(query)
+        .then(function(result){
+          result.features.forEach(function(item){
+             var g = new Graphic({
+               geometry: item.geometry,
+               attributes: item.attributes,
+               symbol: {
+                 type: "simple-line",
+                 color: "black",
+                 width: 1.2,
+                 style: "short-dot"
+               },
+               popupTemplate: {
+                 title: "{TRL_NAME}",
+                 content: "{*}"
+               }
+             });
+             view.graphics.add(g);
+          });
+
+          // Zoom to the data returned
+          view.when(function(){
+            view.goTo({
+              target: view.graphics.toArray()
+            });
+          });
+
+         })
+        .otherwise(function(e){
+          console.log(e);
+        });
+
+        $('#clearMe').on('click', function() { 
+
+              var featureLayer = new FeatureLayer({
+               url: "https://services9.arcgis.com/wpAdAylFiNhHWMxM/arcgis/rest/services/2_5_week/FeatureServer/0?token=ONsPyli0nRde4vDoJhnTVXWiOHTOURvQn95r1EO3zwR6yYirkMVn3KX0FqfJ6wbhAeMIeypa2bmZfD6Du_dmu7Ct2QAbt_rKn3bdv956wW9YHkrlSyXugyWFmw2SIG9IHM7KQc_176Fr1zGvskAZ_olLmMf6dJOCa5rK4P0xCYX-ukpsMc4gf1SduORjiw-b8ozPQoTt4a6d2x8Pdhep_p2AwfI3qoSkIZZBfWFAhBtZt0tqpBM-H3mnPVWljmXG" 
+
+               
+              });
+
+            map.add(featureLayer);
+
+        });
+
+
+
+
+
+
+
+        $('#addLayer').on('click', function() { 
+
+              var featureLayer = new FeatureLayer({
+               url: "https://services3.arcgis.com/GVgbJbqm8hXASVYi/arcgis/rest/services/Trails/FeatureServer/0" 
+
+
+              });
+
+            map.add(featureLayer);
+        });
+
+
+
+        $('#toggleQuake').on('click', function() {
+
+                  var query = new Query();
+                      query.where = "mag > 3.3"
+                      query.outFields = ["*"];
+                      query.returnGeometry = true;
+
+                    // Define the query task
+         var queryTask = new QueryTask({
+        url:"https://services9.arcgis.com/wpAdAylFiNhHWMxM/arcgis/rest/services/2_5_week/FeatureServer/0?token=ONsPyli0nRde4vDoJhnTVXWiOHTOURvQn95r1EO3zwR6yYirkMVn3KX0FqfJ6wbhAeMIeypa2bmZfD6Du_dmu7Ct2QAbt_rKn3bdv956wW9YHkrlSyXugyWFmw2SIG9IHM7KQc_176Fr1zGvskAZ_olLmMf6dJOCa5rK4P0xCYX-ukpsMc4gf1SduORjiw-b8ozPQoTt4a6d2x8Pdhep_p2AwfI3qoSkIZZBfWFAhBtZt0tqpBM-H3mnPVWljmXG"
+        });
+
+      // Exe
+                     queryTask.execute(query)
+                  .then(function(result){
+                    result.features.forEach(function(item){
+                       var g = new Graphic({
+                         geometry: item.geometry,
+                         attributes: item.attributes,
+                         symbol: {
+                           type: "simple-marker",
+                           color: "red",
+                           width: 1.5,
+                           style: "short-dot"
+                         },
+                         popupTemplate: {
+                           title: "{mag}",
+                           content: "{*}"
+                         }
+                       });
+                       view.graphics.add(g);
+                    });
+
+                    // Zoom to the data returned
+                    view.when(function(){
+                      view.goTo({
+                        target: view.graphics.toArray()
+                      });
+                    });
+
+                   })
+                  .otherwise(function(e){
+                    console.log(e);
+                  });
+
+            
+              });
+
+
+
+        $('#toggleMe').on('click', function() {
+
+                  var query = new Query();
+      query.where = "TRL_NAME like '%b%'"
+      query.outFields = ["*"];
+      query.returnGeometry = true;
+
+        // Define the query task
+         var queryTask = new QueryTask({
+        url: "https://services3.arcgis.com/GVgbJbqm8hXASVYi/arcgis/rest/services/Trails/FeatureServer/0" 
+        });
+
+      // Exe
+                     queryTask.execute(query)
+                  .then(function(result){
+                    result.features.forEach(function(item){
+                       var g = new Graphic({
+                         geometry: item.geometry,
+                         attributes: item.attributes,
+                         symbol: {
+                           type: "simple-line",
+                           color: "red",
+                           width: 1.5,
+                           style: "short-dot"
+                         },
+                         popupTemplate: {
+                           title: "{TRL_NAME}",
+                           content: "{*}"
+                         }
+                       });
+                       view.graphics.add(g);
+                    });
+
+                    // Zoom to the data returned
+                    view.when(function(){
+                      view.goTo({
+                        target: view.graphics.toArray()
+                      });
+                    });
+
+                   })
+                  .otherwise(function(e){
+                    console.log(e);
+                  });
+
+            
+              });
+            
+      
+    });
+
+
+
+
+  </script>
+
+
+</html>
