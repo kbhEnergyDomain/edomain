@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Document</title>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.4.0/Chart.min.js"></script>
+    <link rel="stylesheet" href="https://js.arcgis.com/4.11/esri/themes/light/main.css"  />
+    <style>
+      html,
+      body,
+      #viewDiv {
+        padding: 0;
+        margin: 0;
+        height: 80%;
+        width: 100%;
+      }
+      #titleDiv {
+        padding: 10px;
+      }
+
+      #titleText {
+        font-size: 20pt;
+        font-weight: 60;
+        padding-bottom: 10px;
+      }
+
+
+    </style>
+ 
+    <script src="https://js.arcgis.com/4.11/"></script>
+
+
+</head>
+ <body>
+    <div id="viewDiv"></div>
+
+    <div id="titleDiv" class="esri-widget">
+      <div id="titleText">Well Locations</div>
+      <div>Extracted from Mineral Ware Database </div>
+    </div>
+    <div id="panel">
+      <div style="padding: 15px;">
+
+        <canvas id="producers-chart" height="250" width="550"></canvas>
+        <canvas id="production-date" height="250" width="550"></canvas>
+        <canvas
+          id="disposition-chart"
+          width="200"
+          height="350"
+          style="float:left;"
+        ></canvas>
+        <canvas
+          id="gender-chart"
+          width="200"
+          height="350"
+          style="float:left;"
+        ></canvas>
+        <canvas
+          id="race-chart"
+          width="200"
+          height="350"
+          style="float:left;"
+        ></canvas>
+      </div>
+    </div>
+  </body>
+
+
+
+    <script>
+
+    var full_map; 
+      var full_view; 
+
+
+        var wells_producing = { } ;  //  1
+        var wells_plugged   = { } ;  // 11 or 13
+        var wells_dry       = { } ;  //  4
+        var wells_other     = { } ;  // all else up to 16
+      var wells_gas       = { } ;  // 2
+
+      var producerChartData = { }; 
+
+      require([
+        "esri/Map",
+        "esri/views/MapView",
+        "esri/layers/FeatureLayer",
+        "esri/widgets/Search",
+        "esri/WebMap",
+        "esri/Graphic",
+        "esri/Color",
+        "esri/geometry/Circle",
+        "esri/symbols/SimpleMarkerSymbol", 
+        "esri/symbols/SimpleLineSymbol", "esri/symbols/SimpleFillSymbol", "esri/renderers/SimpleRenderer",
+        "esri/widgets/Legend",
+        "esri/widgets/Expand",
+        "esri/widgets/Bookmarks",
+        "esri/core/lang",
+        "esri/tasks/support/Query",
+        "esri/core/promiseUtils",
+        "esri/core/watchUtils"
+      ], function(
+        Map, 
+        MapView,
+        FeatureLayer,
+        Search, 
+        WebMap,
+        Graphic,
+        Color, 
+        Circle,
+        SimpleMarkerSymbol,
+        SimpleLineSymbol, SimpleFillSymbol, SimpleRenderer,
+        Legend,
+        Expand,
+        Bookmarks,
+        lang,
+        Query,
+        promiseUtils,
+        watchUtils
+      ) {
+        // Core map functionality here. 
+
+      var map = new Map({
+          basemap: "streets"
+        });
+      full_map = map; 
+        var view = new MapView({
+          container: "viewDiv",
+          map: map,
+          zoom: 12,
+          center: [-100, 31] // longitude, latitude
+        });
+    //  https://services9.arcgis.com/wpAdAylFiNhHWMxM/arcgis/rest/services/All_MineralWare_Wells/FeatureServer
+    full_view = view; 
+     var featureLayer = new FeatureLayer({
+          url:
+            "https://services9.arcgis.com/wpAdAylFiNhHWMxM/arcgis/rest/services/All_MineralWare_Wells/FeatureServer/0",
+          outFields:['operator_name']
+        });
+
+
+
+
+
+
+        var well_head_symbol = {
+        type: "simple-marker",  // autocasts as new SimpleMarkerSymbol()
+        style: "triangle",
+        color: "blue",
+        size: "8px",  // pixels
+        outline: {  // autocasts as new SimpleLineSymbol()
+          color: [ 247, 34, 0 ],
+          width: 1  // points
+        }
+      };
+
+
+    var circle_symbol = {
+        type: "simple-fill",  // autocasts as new SimpleFillSymbol()
+        color: [ 251,51, 204, 0.9 ],
+        style: "cross",
+        outline: {  // autocasts as new SimpleLineSymbol()
+          color: "white",
+          width: 1
+        }
+      };
+
+
+        featureLayer.screenSizePerspectiveEnabled = true;
+    featureLayer.renderer =  {
+          type: "simple",  // autocasts as new SimpleRenderer()
+          symbol: well_head_symbol 
+        } 
+
+
+        map.add(featureLayer);
+    view.ui.add("titleDiv", "top-right");
+   
+        // Adds the search widget to the top right corner of the view
+        view.ui.add(
+          new Search({
+            view: view
+          }),
+          "top-right"
+        );
+
+
+
+
+        ///-------------------------------------------------------------------
+        // Interactive portion here. 
+
+        full_view.on("click", function(event){
+
+           console.log("ouch")
+        var graphic = new Graphic({
+          geometry: event.mapPoint,
+          symbol: {
+            type: "simple-marker", // autocasts as new SimpleMarkerSymbol()
+            color: "blue",
+            size: 8,
+            outline: { // autocasts as new SimpleLineSymbol()
+              width: 0.5,
+              color: "darkblue"
+            }
+          }
+        });
+        var circle  = new Circle ({
+        center: event.mapPoint,
+
+        geodesic: true,
+          radius: 3,
+          radiusUnit: "miles",
+         
+        
+        }); 
+
+        var fillSymbol = {
+          type: "simple-fill", // autocasts as new SimpleFillSymbol()
+          color: [227, 139, 79, 0.8],
+          outline: { // autocasts as new SimpleLineSymbol()
+          color: [255, 255, 255],
+          width: 1
+          }
+        };
+      var polygonGraphic = new Graphic({
+        geometry: circle,
+        symbol: fillSymbol
+        });
+      console.log(circle.rings, circle)
+
+      full_view.graphics.removeAll()
+
+      full_view.graphics.add(graphic);
+      full_view.graphics.add(polygonGraphic);
+
+
+      var query = featureLayer.createQuery();
+      //query.where = "operator_name is not null";
+      query.outFields = [ "operator_name" , "well_name" , "status_type_id"];
+      query.geometry = polygonGraphic.geometry;
+      query.spatialRelationship = "intersects";  // this is the default
+      query.returnGeometry = true;
+      featureLayer.queryFeatures(query).then(function(response) { 
+           
+            var features = response.features;
+            var inBuffer = [];
+
+          wells_producing = { } ;  //  1
+            wells_plugged   = { } ;  // 11
+            wells_dry       = { } ;  //  4
+            wells_other     = { }
+            wells_gas       = { } 
+
+
+            console.log(" Length of features = ", features, response)
+
+          for (var x = 0; x < features.length; x++) {
+                  //popTotal = popTotal + 1; //features[x].attributes["POP2000"];
+                  var opn = features[x].attributes['operator_name'];
+                  var stx = features[x].attributes['status_type_id'];
+                  console.log( x, features[x].attributes['operator_name']," -> ", 
+                      features[x].attributes['well_name'], features[x].attributes['status_type_id'], )
+                  if (stx == 1 ) {
+                    if (!(opn in wells_producing)) {
+                      wells_producing[opn] = 1; 
+                    } else { 
+                      wells_producing[opn] = wells_producing[opn] + 1; 
+                    }
+                  }
+                  else if (stx == 4 ) {
+                    if (!(opn in wells_dry)) {
+                      wells_dry[opn] = 1; 
+                    } else { 
+                      wells_dry[opn] = wells_dry[opn] + 1; 
+                    }
+                  }
+                  else if (stx == 11 || stx == 13 ) {
+                    if (!(opn in wells_plugged)) {
+                      wells_plugged[opn] = 1; 
+                    } else { 
+                      wells_plugged[opn] = wells_plugged[opn] + 1; 
+                    }
+                  }
+                  else if (stx == 2) {
+                    if (!(opn in wells_gas)) {
+                      wells_gas[opn] = 1; 
+                    } else { 
+                      wells_gas[opn] = wells_gas[opn] + 1; 
+                    }
+                  }
+                  else {
+                    if (!(opn in wells_other)) {
+                      wells_other[opn] = 1; 
+                    } else { 
+                      wells_other[opn] = wells_other[opn] + 1; 
+                    }
+                  }
+
+              }
+          console.log(wells_producing);
+          console.log(wells_dry);
+          console.log(wells_plugged);
+        console.log(wells_gas);
+        console.log(wells_other);
+
+
+        createCharts();
+        });
+
+      });
+
+
+
+
+      function createCharts( data ) { 
+       console.log("Creating")
+       var wpr = wells_producing; 
+         console.log(wpr);
+         var mylabels = Object.keys(wpr);
+         var myvalues = Object.values(wells_producing);
+    console.log(myvalues, mylabels);
+         const yearCanvas = document.getElementById("producers-chart");
+         
+          yearChart = new Chart(yearCanvas.getContext("2d"), {
+            type: "bar",
+            data: { 
+              labels: mylabels, //keys(wells_producing),
+              datasets: [
+                {
+                  label: "Producing wells ",
+                  backgroundColor: "#149dcf",
+                  //
+                  data: myvalues, // values(wells_producing),
+                },
+              ]
+            },
+            options: {
+                   legend: { display: false },
+            title: {
+              display: true,
+              text: 'Producing'
+            }
+              }
+          });
+
+      }
+
+
+
+        ///-------------------------------------------------------------------
+  
+      });  // end of require function
+
+    </script>
+
+</html>

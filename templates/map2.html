@@ -22,13 +22,9 @@
     <input class="btn btn-primary"  id="toggleMe"
        type="button"
        value="Add Another ">    
-
-
-       <input class="btn btn-primary"  id="addQuakes"
+       <input class="btn btn-primary"  id="clearMe"
        type="button"
        value="All Quakes">
-
-
               <input class="btn btn-primary"  id="toggleQuake"
        type="button"
        value="Quake > 0.5">
@@ -47,10 +43,9 @@
       "esri/tasks/QueryTask",
       "esri/Graphic",
       "esri/layers/FeatureLayer",
-      "esri/layers/MapImageLayer",
       "esri/widgets/BasemapToggle",
       "esri/widgets/BasemapGallery"
-    ], function(Map, MapView, Query, QueryTask, Graphic, FeatureLayer, MapImageLayer, 
+    ], function(Map, MapView, Query, QueryTask, Graphic, FeatureLayer, 
         BasemapToggle, BasemapGallery) {
 
       var map = new Map({
@@ -71,37 +66,6 @@
       });
 
       map.add(featureLayer);
-
-
-
-      
-      myView = view; 
-      var mapLayer = new MapImageLayer({
-        url: "https://services9.arcgis.com/wpAdAylFiNhHWMxM/arcgis/rest/services/testme/FeatureServer",
-        sublayers: [
-        {
-          title: "Wells".
-          id: 0,
-          source: { 
-            type: 'data-layer',
-            type: dynamic-layer,
-            dataSource: {
-                  type: "table",
-                  workspaceId: "MyDatabaseWorkspaceIDSSR2",
-                  dataSourceName: "ss6.gdb.Railroads"
-                }
-
-          }
-
-        }
-
-
-        ]
-      });
-
-      map.add(mapLayer);
-
-
 //       var basemapToggle = new BasemapToggle({
 //         view: view,
 //         secondMap: "satellite"
@@ -167,7 +131,7 @@
           console.log(e);
         });
 
-        $('#addQuakes').on('click', function() { 
+        $('#clearMe').on('click', function() { 
 
               var featureLayer = new FeatureLayer({
                url: "https://services9.arcgis.com/wpAdAylFiNhHWMxM/arcgis/rest/services/2_5_week/FeatureServer/0?token=ONsPyli0nRde4vDoJhnTVXWiOHTOURvQn95r1EO3zwR6yYirkMVn3KX0FqfJ6wbhAeMIeypa2bmZfD6Du_dmu7Ct2QAbt_rKn3bdv956wW9YHkrlSyXugyWFmw2SIG9IHM7KQc_176Fr1zGvskAZ_olLmMf6dJOCa5rK4P0xCYX-ukpsMc4gf1SduORjiw-b8ozPQoTt4a6d2x8Pdhep_p2AwfI3qoSkIZZBfWFAhBtZt0tqpBM-H3mnPVWljmXG" 
@@ -180,18 +144,6 @@
         });
 
 
-        $('#getData').on('click', function() { 
-
-
-               
-
-
-     
-
-        });
-
-
-
 
 
 
@@ -200,7 +152,7 @@
         $('#addLayer').on('click', function() { 
 
               var featureLayer = new FeatureLayer({
-               url: "https://services3.arcgis.com/GVgbJbqm8hXASVYi/arcgis/rest/services/Trails/FeatureServer/0" 
+               url: "https://services9.arcgis.com/wpAdAylFiNhHWMxM/ArcGIS/rest/services/data_wells/FeatureServer/0" 
 
 
               });
