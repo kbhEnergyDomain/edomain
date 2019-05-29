@@ -15,6 +15,7 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.20.1/moment.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.1/Chart.min.js"></script>
 
+<link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
 
 <!-- 	<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.4.0/Chart.min.js"></script> -->
     <link rel="stylesheet" href="https://js.arcgis.com/4.11/esri/themes/light/main.css"  />
@@ -22,9 +23,10 @@
       html,
       body,
       #viewDiv {
+
         padding: 0;
         margin: 0;
-        height: 85%;
+        height: 100%;
         width: 100%;
       }
       #titleDiv {
@@ -37,6 +39,12 @@
         padding-bottom: 10px;
       }
 
+.chart-container { 
+display: inline;
+float: left;
+width: 50%;
+height: 25%;
+}
 
 	  .chart-type { 
 		display: inline;
@@ -61,36 +69,26 @@
 
 </head>
  <body>
-    <div id="viewDiv"></div>
 
-    <div id="titleDiv" class="esri-widget">
-      <div id="titleText">Well Locations</div>
-      <div>Extracted from Mineral Ware Database </div>
-    </div>
-    <div id="panel" height="300" width="100%">
-      <div style="padding: 15px; height: 300; ">
-
-        <button id="demo" onclick="myFunction()">Click me</button>
-
-        <canvas id="producers-chart" class="chart-type" height="250" width="500"></canvas>
-        <canvas id="permits-chart" class="chart-type" height="250" width="550"></canvas>
-        <canvas id="production-chart" class="chart-type" width="500" height="350"></canvas>
-
-
-        <canvas
-          id="gender-chart"
-          width="200"
-          height="350"
-          style="float:left;"
-        ></canvas>
-        <canvas
-          id="race-chart"
-          width="200"
-          height="350"
-          style="float:left;"
-        ></canvas>
-      </div>
-    </div>
+  <section class="bg-light">
+        <div class="container">
+          <div class="row"> 
+            <div class="col-lg-8">
+               <div id="viewDiv" ></div>
+                <div id="titleDiv" class="esri-widget">
+                <div id="titleText">Well Locations</div>
+                <div>Extracted from Mineral Ware Database </div>
+              </div>
+             </div>
+          <div class="col-lg-4">
+              <button id="demo" class="chart-type"  onclick="myFunction()">Click me</button>
+              <canvas id="producers-chart" class="chart-type" height="250" width="300"></canvas>
+              <canvas id="permits-chart" class="chart-type" height="250" width="300"></canvas>
+              <canvas id="production-chart" class="chart-type" width="500" height="350"></canvas>
+         </div>
+       </div>
+     </div>
+   </section>
   </body>
 
 
@@ -108,6 +106,7 @@
     var full_view; 
     var producerChart;
     var permitsChart;
+    var productionChart; 
 
     var wells_producing = { } ;  //  1
     var wells_plugged   = { } ;  // 11 or 13
@@ -117,6 +116,7 @@
     var permit_count    = { } ;
     var permitChartData = { } ; 
     var producerChartData = { }; 
+    var list_of_apis    = { } ; 
 
       require([
       	"esri/Map",
@@ -307,7 +307,7 @@
 
 			var query = featureLayer.createQuery();
 			//query.where = "operator_name is not null";
-			query.outFields = [ "operator_name" , "well_name" , "status_type_id", "permit_num", "depth"];
+			query.outFields = [ "operator_name" , "well_name" , "status_type_id", "permit_num", "depth", "api"];
 			query.geometry = polygonGraphic.geometry;
 			query.spatialRelationship = "intersects";  // this is the default
 			query.returnGeometry = true;
@@ -322,17 +322,22 @@
 	       		wells_other     = { }
 	       		wells_gas       = { } 
 	       		permit_count    = { } 
+            list_of_apis    = { } 
 
 
 		        console.log(" Length of features = ", features, response)
 
 			    for (var x = 0; x < features.length; x++) {
 			            //popTotal = popTotal + 1; //features[x].attributes["POP2000"];
+                  var api = features[x].attributes['api']
 			            var opn = features[x].attributes['operator_name'];
 			            var stx = features[x].attributes['status_type_id'];
 			            var pnum = features[x].attributes['permit_num'];
 			            //console.log( x, features[x].attributes['operator_name']," -> ", features[x].attributes['permit_num'],
 			            // 		features[x].attributes['well_name'], features[x].attributes['status_type_id'], )
+
+                  list_of_apis[api] = 1; 
+
 			            if (stx == 1 ) {
 			            	if (!(opn in wells_producing)) {
 			            		wells_producing[opn] = 1; 
@@ -385,7 +390,7 @@
 
 				makeDataForChart( wells_producing, producerChart ) 
 				makeDataForChart( permit_count, permitsChart ) 
-
+        makeDataForLineChart( list_of_apis, productionChart)
 				
  				});
 
@@ -399,9 +404,32 @@
 		$(document).ready(createCharts); 
 		//createCharts();
 
+    function makeDataForLineChart(api_dict, thechart){
+        console.log("List of Apis " , api_dict, Object.keys(api_dict));
 
 
-        function makeDataForChart(wpr, thechart ) { 
+        $.ajax({
+            type: "POST",
+            crossDomain: true,
+            url: "{% url 'getProductionPayments'  %}",
+            // url : '/api/getProductionPayments/',
+            data: {'arr':  Object.keys(api_dict)},
+            // contentType: "application/json; charset=utf-8",  
+            // dataType: "jsonp",
+            headers: {"X-CSRFToken":'{{ csrf_token }}'},
+            success: function (result) {
+                console.log("SUCCESS")
+                console.log(result);
+            },
+            error: function (result) {
+               console.log("FAILURE")
+                console.log(result);
+            }
+            });
+      }
+
+
+    function makeDataForChart(wpr, thechart ) { 
 			//var wpr = wells_producing; 
          	//console.log(".... making data ... ", wpr)
          	var mylabels = Object.keys(wpr);
@@ -605,15 +633,9 @@
                   };
 
 
-
-
-
-
-
-
                   ctx = document.getElementById("production-chart").getContext('2d');
 
-                  chart = new Chart(ctx, {
+                  productionChart = new Chart(ctx, {
                     type: 'line',
                     data: { datasets: [s1, s2] },
                     options: {
@@ -638,18 +660,24 @@
       function myFunction() {
      document.getElementById("demo").innerHTML = "YOU CLICKED ME!";
     var arr = [1, 2, 3, 4];
+    var uuu = "{% url 'getProductionPayments'  %}"; 
+    console.log(uuu)
 
              $.ajax({
             type: "POST",
+            crossDomain: true,
             url: "{% url 'getProductionPayments'  %}",
+            // url : '/api/getProductionPayments/',
             data: {'arr': arr},
-            contentType: "application/x-www-form-urlencoded/json",
-            dataType: "json",
+            // contentType: "application/json; charset=utf-8",  
+            // dataType: "jsonp",
             headers: {"X-CSRFToken":'{{ csrf_token }}'},
             success: function (result) {
+                console.log("SUCCESS")
                 console.log(result);
             },
             error: function (result) {
+               console.log("FAILURE")
                 console.log(result);
             }
             });

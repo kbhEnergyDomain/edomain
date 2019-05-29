@@ -476,13 +476,12 @@ def get_Production_payments(request, *args, **kwargs):
                          password="appDeveloper")
 	apis = [100045, 100302, ]
 
-	print(request.POST.get('arr[]'))
-
-
-
+	al = dict(request.POST)
+	print(al['arr[]'])
+	# apis = al['arr[]']
+	print(al)
 	db = mc.sampledb
 	coll = db.test_coll
-
 	rdata = [ ]
 
 	for api in apis: 
