@@ -8,6 +8,7 @@ from edlm.models import *
 from chartjs.views.lines import BaseLineChartView
 from .forms import CustomerForm, CustomerFields, BidForm, RoyaltiesForm, DblistingsForm	
 from django.views.decorators.csrf import csrf_exempt
+import pymongo
 # Approach #1
 #import json
 # def return_json_data(query,cursor, )
@@ -371,7 +372,7 @@ class brokersPageView(TemplateView):
 
 class mapsPageView(TemplateView):
 	#return HttpResponse("Hello World")
-	template_name = 'maps.html'
+	template_name = 'map_jquery.html'
 	model = Wells 
 
 	def get_context_data(self, **kwargs):
@@ -464,6 +465,35 @@ def get_Royalty_Owners(request, *args, **kwargs):
 		'owners': [ x['owner_name'] for x in myowners ]
 	}
 	return JsonResponse(data)
+
+
+
+def get_Production_payments(request, *args, **kwargs): 
+
+	mc = pymongo.MongoClient("mongodb://18.224.135.207:27017/", 
+                         authSource="admin", 
+                         username="admin", 
+                         password="appDeveloper")
+	apis = [100045, 100302, ]
+
+	print(request.POST.get('arr[]'))
+
+
+
+	db = mc.sampledb
+	coll = db.test_coll
+
+	rdata = [ ]
+
+	for api in apis: 
+		oln = coll.find_one({'api': api})
+		rdata.append({ 'api' : api, 'data' : oln['data']})
+
+	ret = { 'prod': rdata }
+
+	return JsonResponse(ret)
+
+
 
 # Examples include: 
 # data = list(SomeModel.objects.values())
