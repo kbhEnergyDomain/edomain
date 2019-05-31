@@ -474,22 +474,23 @@ def get_Production_payments(request, *args, **kwargs):
                          authSource="admin", 
                          username="admin", 
                          password="appDeveloper")
-	apis = [100045, 100302, ]
 
 	al = dict(request.POST)
 	print(al['arr[]'])
-	# apis = al['arr[]']
-	print(al)
+	apis = [ x[2:] for x in  al['arr[]'] ]
+	print(apis)
 	db = mc.sampledb
-	coll = db.test_coll
+	coll = db.texas_oil
 	rdata = [ ]
 
 	for api in apis: 
-		oln = coll.find_one({'api': api})
-		rdata.append({ 'api' : api, 'data' : oln['data']})
+		oln = coll.find_one({'api': int(api)})
+
+		if oln: 
+			rdata.append({ 'api' : api, 'data' : oln['data']})
 
 	ret = { 'prod': rdata }
-
+	print(ret)
 	return JsonResponse(ret)
 
 

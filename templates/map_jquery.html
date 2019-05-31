@@ -49,8 +49,16 @@ height: 25%;
 	  .chart-type { 
 		display: inline;
 		float: left; 
-
+  
 	   }
+
+
+    .line-chart-type { 
+    display: inline;
+    float: left; 
+    height: 450px;
+     }
+
 
 
   #jqSlider {
@@ -83,10 +91,18 @@ height: 25%;
           <div class="col-lg-4">
               <button id="demo" class="chart-type"  onclick="myFunction()">Click me</button>
               <canvas id="producers-chart" class="chart-type" height="250" width="300"></canvas>
-              <canvas id="permits-chart" class="chart-type" height="250" width="300"></canvas>
-              <canvas id="production-chart" class="chart-type" width="500" height="350"></canvas>
+              <!-- <canvas id="permits-chart" class="chart-type" height="250" width="300"></canvas>
+
+               -->
+               <canvas id="pie-chart" class="chart-type" height="250" width="300"></canvas>
+             
          </div>
        </div>
+          <div class="row"> 
+            <div class="col-lg-12" height="400px">
+                 <canvas id="production-chart" class="line-chart-type" width="100%" ></canvas>
+        </div>
+      </div>
      </div>
    </section>
   </body>
@@ -101,12 +117,14 @@ height: 25%;
 
 
       // ------------------------------
-
+    var basic_colors = [ "red", "blue", "green", "purple", "orange", "black"];
+    var basic_colors_len = basic_colors.length; 
     var full_map; 
     var full_view; 
     var producerChart;
     var permitsChart;
     var productionChart; 
+    var pieChart; 
 
     var wells_producing = { } ;  //  1
     var wells_plugged   = { } ;  // 11 or 13
@@ -114,9 +132,102 @@ height: 25%;
     var wells_other     = { } ;	 // all else up to 16
     var wells_gas       = { } ;  // 2
     var permit_count    = { } ;
-    var permitChartData = { } ; 
-    var producerChartData = { }; 
+ 
+    
     var list_of_apis    = { } ; 
+    var status_counts   = { } ;
+
+
+               var s1 = {
+                    label: 's1',
+                    borderColor: 'blue',
+                    data: [
+                        {'x': '2015-03-01', 'y': 12},
+                         {'x': '2015-04-01', 'y': 62},
+                         {'x': '2015-05-01', 'y': 5},
+                         {'x': '2015-06-01', 'y': 0},
+                         {'x': '2015-07-01', 'y': 150},
+                         {'x': '2015-08-01', 'y': 359},
+                         {'x': '2015-09-01', 'y': 102},
+                         {'x': '2015-10-01', 'y': 5},
+                         {'x': '2015-11-01', 'y': 85},
+                         {'x': '2015-12-01', 'y': 57},
+                         {'x': '2016-01-01', 'y': 394},
+                         {'x': '2016-02-01', 'y': 387},
+                         {'x': '2016-03-01', 'y': 327},
+                         {'x': '2016-04-01', 'y': 307},
+                         {'x': '2016-05-01', 'y': 300},
+                         {'x': '2016-06-01', 'y': 111},
+                         {'x': '2016-07-01', 'y': 30},
+                         {'x': '2016-08-01', 'y': 199},
+
+                         {'x': '2017-12-01', 'y': 0},
+                         {'x': '2018-01-01', 'y': 0},
+                         {'x': '2018-02-01', 'y': 18},
+                         {'x': '2018-03-01', 'y': 114},
+                         {'x': '2018-04-01', 'y': 121},
+                         {'x': '2018-05-01', 'y': 2},
+                         {'x': '2018-06-01', 'y': 175},
+                         {'x': '2018-07-01', 'y': 281},
+                         {'x': '2018-08-01', 'y': 352},
+                         {'x': '2018-09-01', 'y': 33},
+                         {'x': '2018-10-01', 'y': 138},
+                         {'x': '2018-11-01', 'y': 385},
+                         {'x': '2018-12-01', 'y': 276},
+                         {'x': '2019-01-01', 'y': 18},
+                         {'x': '2019-02-01', 'y': 80},
+                    ]
+                  };
+
+                  var s2 = {
+                    label: 's2',
+                    borderColor: 'red',
+                    data: [
+                        {'x': '2015-03-01', 'y': 4655},
+                         {'x': '2015-04-01', 'y': 4775},
+                         {'x': '2015-05-01', 'y': 2226},
+                         {'x': '2015-06-01', 'y': 1649},
+                         {'x': '2015-07-01', 'y': 3735},
+                         {'x': '2015-08-01', 'y': 4127},
+                         {'x': '2015-09-01', 'y': 4231},
+                         {'x': '2015-10-01', 'y': 4232},
+                         {'x': '2015-11-01', 'y': 3816},
+                         {'x': '2015-12-01', 'y': 1519},
+                         {'x': '2016-01-01', 'y': 3138},
+                         {'x': '2016-02-01', 'y': 4118},
+                         {'x': '2016-03-01', 'y': 2411},
+                         {'x': '2016-04-01', 'y': 3679},
+                         {'x': '2016-05-01', 'y': 3180},
+                         {'x': '2016-06-01', 'y': 4386},
+                         {'x': '2016-07-01', 'y': 3940},
+                         {'x': '2016-08-01', 'y': 3876},
+                         {'x': '2016-09-01', 'y': 3793},
+                         {'x': '2016-10-01', 'y': 4037},
+                         {'x': '2016-11-01', 'y': 4044},
+                         {'x': '2016-12-01', 'y': 3950},
+                         {'x': '2017-01-01', 'y': 3155},
+                         {'x': '2019-03-01', 'y': 3079},
+                         
+                                            ]
+                  };
+    var productionChartData = {
+                    type: 'line',
+                    data: { datasets: [s1,s2] },
+                    options: {
+                      scales: {
+                        xAxes: [{
+                          type: 'time'
+                        }]
+                      }
+                    }
+                  };
+
+
+    var statusNames = [ 'None','Oil', 'Gas', 'Oil/Gas', 'Dry Hole', 'Permit', 'Injection', 'Pre-Permit',
+          'Horizontal Well Surface Site', 'Directional Well Surface Site','Other',
+          'Plugged Oil',  'Plugged Gas',  'Plugged Oil/Gas',  'Shut-in Oil', 'Shut-in Gas','Cancelled Location',
+          'Plugged', 'Salt Water Disposal', 'Terminated', 'Shut-in Oil/Gas', 'Water', 'Gas Storage',
+           'Inactive Oil', 'Inactive Gas', 'Expired Permit', 'Abandoned']
 
       require([
       	"esri/Map",
@@ -323,6 +434,7 @@ height: 25%;
 	       		wells_gas       = { } 
 	       		permit_count    = { } 
             list_of_apis    = { } 
+            status_counts   = { } 
 
 
 		        console.log(" Length of features = ", features, response)
@@ -337,6 +449,13 @@ height: 25%;
 			            // 		features[x].attributes['well_name'], features[x].attributes['status_type_id'], )
 
                   list_of_apis[api] = 1; 
+
+                  if (!(stx in status_counts)) {
+                    status_counts[stx] = 1;
+                  } else { 
+                    status_counts[stx] = status_counts[stx] + 1;
+                  }
+
 
 			            if (stx == 1 ) {
 			            	if (!(opn in wells_producing)) {
@@ -388,8 +507,9 @@ height: 25%;
 				// console.log(wells_other);
 				// console.log(permit_count);
 
-				makeDataForChart( wells_producing, producerChart ) 
-				makeDataForChart( permit_count, permitsChart ) 
+        makeDataForChart( wells_producing, producerChart , 0) 
+        makeDataForChart( status_counts, pieChart , 1) 
+				//makeDataForChart( permit_count, permitsChart ) 
         makeDataForLineChart( list_of_apis, productionChart)
 				
  				});
@@ -406,8 +526,6 @@ height: 25%;
 
     function makeDataForLineChart(api_dict, thechart){
         console.log("List of Apis " , api_dict, Object.keys(api_dict));
-
-
         $.ajax({
             type: "POST",
             crossDomain: true,
@@ -419,6 +537,27 @@ height: 25%;
             headers: {"X-CSRFToken":'{{ csrf_token }}'},
             success: function (result) {
                 console.log("SUCCESS")
+                var sarray = [] 
+
+                for (wndx in result['prod']) {
+                     cndx = wndx % basic_colors_len;
+                     well = result['prod'][wndx]
+                     console.log(well)
+                     name = well['api']
+                     wdata = well['data']
+                     sarray.push( {
+                          label: name, 
+                          borderColor: basic_colors[cndx],
+                          fill: false, 
+                          data: wdata,
+                          });                  
+                    }
+
+                console.log(sarray);
+                //productionChartData.data.labels = wnames ; 
+                productionChart.data.datasets = sarray ;
+                 
+                thechart.update();
                 console.log(result);
             },
             error: function (result) {
@@ -429,10 +568,28 @@ height: 25%;
       }
 
 
-    function makeDataForChart(wpr, thechart ) { 
+
+
+
+    function makeDataForChart(wpr, thechart, useIndex ) { 
 			//var wpr = wells_producing; 
-         	//console.log(".... making data ... ", wpr)
-         	var mylabels = Object.keys(wpr);
+         	console.log(".... making data ... ", wpr, thechart) 
+
+         
+
+          var mylblndx = Object.keys(wpr);
+          var mylabels = [] 
+
+          if (useIndex == 1) {
+          for ( var i=0; i < mylblndx.length; i++ ) { 
+              ix = parseInt(mylblndx[i]) ; 
+             // console.log(ix, i, statusNames[ix])
+              mylabels.push( statusNames[ix]);
+            }
+          } else {
+            mylabels = mylblndx; 
+          }
+
          	var myvalues = Object.values(wpr);
     			console.log(myvalues, mylabels);
     			thechart.data.labels = mylabels; 
@@ -452,185 +609,128 @@ height: 25%;
          
          
          producerChart = new Chart(producerCanvas.getContext("2d"), {
-            type: "bar",
-            data: { 
-              labels: ["a","b","c"], //keys(wells_producing),
-              datasets: [
-                {
-                  label: "Producing wells ",
-                  backgroundColor: "#149dcf",
-                  //
-                  data: [ 2, 3,4 ], // values(wells_producing),
-                },
-              ]
-            },
-            options: {
-            	responsive: false, 
-            	maintainAspectRatio: false, 
-                legend: { display: true },
-			      title: {
-			        display: false,
-			        text: 'Producing'
-			      },
+                      type: "bar",
+                      data: { 
+                        labels: ["a","b","c"], //keys(wells_producing),
+                        datasets: [
+                          {
+                            label: "Companies",
+                            backgroundColor: "blue",
+                            //
+                            data: [ 2, 3,4,5 ], // values(wells_producing),
+                          },
+                        ]
+                      },
+                      options: {
+                       responsive: false, 
+                       maintainAspectRatio: false, 
+                          legend: { display: true },
+                      title: {
+                        display: false,
+                        text: 'Companies'
+                      },
 
-				scales: {
-        			yAxes: [{
-            			ticks: {
-                		beginAtZero:true
-            				}
-				        }]
-				    }
-            	}
-          });
+                  scales: {
+                       yAxes: [{
+                           ticks: {
+                             beginAtZero:true
+                             }
+                          }]
+                      }
+                       }
+                    }
+            );
 
-         const permitsCanvas = document.getElementById("permits-chart");
+    //      const permitsCanvas = document.getElementById("permits-chart");
          
-         permitsChart = new Chart(permitsCanvas.getContext("2d"), {
-            type: "bar",
-            data: { 
-              labels: ["a","b","c"], //keys(wells_producing),
-              datasets: [
-                {
-                  label: "Number of Permits",
-                  backgroundColor: "red",
-                  //
-                  data: [ 2, 3,4,5 ], // values(wells_producing),
-                },
-              ]
-            },
-            options: {
-            	responsive: false, 
-            	maintainAspectRatio: false, 
-                legend: { display: true },
-			      title: {
-			        display: false,
-			        text: 'Permits'
-			      },
+    //      permitsChart = new Chart(permitsCanvas.getContext("2d"), {
+    //         type: "bar",
+    //         data: { 
+    //           labels: ["a","b","c"], //keys(wells_producing),
+    //           datasets: [
+    //             {
+    //               label: "Number of Permits",
+    //               backgroundColor: "red",
+    //               //
+    //               data: [ 2, 3,4,5 ], // values(wells_producing),
+    //             },
+    //           ]
+    //         },
+    //         options: {
+    //         	responsive: false, 
+    //         	maintainAspectRatio: false, 
+    //             legend: { display: true },
+			 //      title: {
+			 //        display: false,
+			 //        text: 'Permits'
+			 //      },
 
-				scales: {
-        			yAxes: [{
-            			ticks: {
-                		beginAtZero:true
-            				}
-				        }]
-				    }
-            	}
-          });
+				// scales: {
+    //     			yAxes: [{
+    //         			ticks: {
+    //             		beginAtZero:true
+    //         				}
+				//         }]
+				//     }
+    //         	}
+    //       });
+
+/*
+
+# well_status_id, well_status_icon, well_status_icon_client, well_status_category, well_status_name, well_type_ok_for_client
+'1', 'well_oil.png', 'well_paid_on.png', 'oil', 'Oil', '1'
+'2', 'well_gas.png', 'well_paid_on.png', 'gas', 'Gas', '1'
+'3', 'well_oil_and_gas.png', 'well_paid_on.png', 'oil_gas', 'Oil/Gas', '1'
+'4', 'well_dry.png', 'well_dry.png', 'dry_hole', 'Dry Hole', '0'
+'5', 'permit.png', 'well_paid_on.png', 'permit', 'Permit', '1'
+'6', 'well_injection.png', 'well_injection.png', 'injection', 'Injection', '0'
+'7', 'permit.png', 'permit.png', 'prepermit', 'Pre-Permit', '0'
+'8', 'well_pad_horizontal.png', 'well_pad_horizontal.png', 'h_surface', 'Horizontal Well Surface Site', '1'
+'9', 'well_pad_directional.png', 'well_pad_directional.png', 'd_surface', 'Directional Well Surface Site', '1'
+'10', 'well_other.png', 'well_other.png', 'other', 'Other', '0'
+'11', 'well_oil_plugged.png', 'well_oil_plugged.png', 'oil_plugged', 'Plugged Oil', '0'
+'12', 'well_gas_plugged.png', 'well_gas_plugged.png', 'gas_plugged', 'Plugged Gas', '0'
+'13', 'well_oil_and_gas_plugged.png', 'well_oil_and_gas_plugged.png', 'oil_gas_plugged', 'Plugged Oil/Gas', '0'
+'14', 'well_oil_shut_in.png', 'well_paid_on.png', 'oil_shut_in', 'Shut-in Oil', '1'
+'15', 'well_gas_shut_in.png', 'well_paid_on.png', 'gas_shut_in', 'Shut-in Gas', '1'
+'16', 'well_other.png', 'well_other.png', 'other', 'Cancelled Location', '0'
+'17', 'well_other.png', 'well_other.png', 'other', 'Plugged', '0'
+'18', 'well_injection.png', 'well_injection.png', 'injection', 'Salt Water Disposal', '0'
+'19', 'well_other.png', 'well_other.png', 'other', 'Terminated', '0'
+'20', 'well_oil_and_gas_shut_in.png', 'well_paid_on.png', 'oil_gas_shut_in', 'Shut-in Oil/Gas', '1'
+'21', 'well_other.png', 'well_other.png', 'other', 'Water', '0'
+'22', 'well_other.png', 'well_other.png', 'other', 'Gas Storage', '0'
+'23', 'well_other.png', 'well_other.png', 'other', 'Inactive Oil', '0'
+'24', 'well_other.png', 'well_other.png', 'other', 'Inactive Gas', '0'
+'25', 'well_other.png', 'well_other.png', 'other', 'Expired Permit', '0'
+'26', 'well_other.png', 'well_other.png', 'other', 'Abandoned', '0'
+
+*/
+
+
+          pieChart =  new Chart(document.getElementById("pie-chart"), {
+                type: 'pie',
+                data: {
+                  labels: ["Africa", "Asia", "Europe", "Latin America", "North America"],
+                  datasets: [{
+                    label: "Population (millions)",
+                    backgroundColor: ["#3e95cd", "#8e5ea2","#3cba9f","#e8c3b9","#c45850","red", "blue", "green"],
+                    data: [2478,5267,734,784,433]
+                  }]
+                },
+                options: {
+                  title: {
+                    display: true,
+                    text: 'Status type in the region selected. '
+                  }
+                }
+            });
+
 
          console.log("Created charts.....")
          ctx = document.getElementById("production-chart").getContext('2d');
          console.log(".....", ctx)
-                var s1 = {
-                    label: 's1',
-                    borderColor: 'blue',
-                    data: [
-                        {'x': '2015-03-01', 'y': 12},
-                         {'x': '2015-04-01', 'y': 62},
-                         {'x': '2015-05-01', 'y': 5},
-                         {'x': '2015-06-01', 'y': 0},
-                         {'x': '2015-07-01', 'y': 150},
-                         {'x': '2015-08-01', 'y': 359},
-                         {'x': '2015-09-01', 'y': 102},
-                         {'x': '2015-10-01', 'y': 5},
-                         {'x': '2015-11-01', 'y': 85},
-                         {'x': '2015-12-01', 'y': 57},
-                         {'x': '2016-01-01', 'y': 394},
-                         {'x': '2016-02-01', 'y': 387},
-                         {'x': '2016-03-01', 'y': 327},
-                         {'x': '2016-04-01', 'y': 307},
-                         {'x': '2016-05-01', 'y': 300},
-                         {'x': '2016-06-01', 'y': 111},
-                         {'x': '2016-07-01', 'y': 30},
-                         {'x': '2016-08-01', 'y': 199},
-                         {'x': '2016-09-01', 'y': 0},
-                         {'x': '2016-10-01', 'y': 0},
-                         {'x': '2016-11-01', 'y': 0},
-                         {'x': '2016-12-01', 'y': 0},
-                         {'x': '2017-01-01', 'y': 0},
-                         {'x': '2017-02-01', 'y': 0},
-                         {'x': '2017-03-01', 'y': 0},
-                         {'x': '2017-04-01', 'y': 0},
-                         {'x': '2017-05-01', 'y': 0},
-                         {'x': '2017-06-01', 'y': 0},
-                         {'x': '2017-07-01', 'y': 0},
-                         {'x': '2017-08-01', 'y': 0},
-                         {'x': '2017-09-01', 'y': 0},
-                         {'x': '2017-10-01', 'y': 8},
-                         {'x': '2017-11-01', 'y': 0},
-                         {'x': '2017-12-01', 'y': 0},
-                         {'x': '2018-01-01', 'y': 0},
-                         {'x': '2018-02-01', 'y': 18},
-                         {'x': '2018-03-01', 'y': 114},
-                         {'x': '2018-04-01', 'y': 121},
-                         {'x': '2018-05-01', 'y': 2},
-                         {'x': '2018-06-01', 'y': 175},
-                         {'x': '2018-07-01', 'y': 281},
-                         {'x': '2018-08-01', 'y': 352},
-                         {'x': '2018-09-01', 'y': 33},
-                         {'x': '2018-10-01', 'y': 138},
-                         {'x': '2018-11-01', 'y': 385},
-                         {'x': '2018-12-01', 'y': 276},
-                         {'x': '2019-01-01', 'y': 18},
-                         {'x': '2019-02-01', 'y': 80},
-                    ]
-                  };
-
-                  var s2 = {
-                    label: 's2',
-                    borderColor: 'red',
-                    data: [
-                        {'x': '2015-03-01', 'y': 4655},
-                         {'x': '2015-04-01', 'y': 4775},
-                         {'x': '2015-05-01', 'y': 2226},
-                         {'x': '2015-06-01', 'y': 1649},
-                         {'x': '2015-07-01', 'y': 3735},
-                         {'x': '2015-08-01', 'y': 4127},
-                         {'x': '2015-09-01', 'y': 4231},
-                         {'x': '2015-10-01', 'y': 4232},
-                         {'x': '2015-11-01', 'y': 3816},
-                         {'x': '2015-12-01', 'y': 1519},
-                         {'x': '2016-01-01', 'y': 3138},
-                         {'x': '2016-02-01', 'y': 4118},
-                         {'x': '2016-03-01', 'y': 2411},
-                         {'x': '2016-04-01', 'y': 3679},
-                         {'x': '2016-05-01', 'y': 3180},
-                         {'x': '2016-06-01', 'y': 4386},
-                         {'x': '2016-07-01', 'y': 3940},
-                         {'x': '2016-08-01', 'y': 3876},
-                         {'x': '2016-09-01', 'y': 3793},
-                         {'x': '2016-10-01', 'y': 4037},
-                         {'x': '2016-11-01', 'y': 4044},
-                         {'x': '2016-12-01', 'y': 3950},
-                         {'x': '2017-01-01', 'y': 3155},
-                         {'x': '2017-02-01', 'y': 2703},
-                         {'x': '2017-03-01', 'y': 3311},
-                         {'x': '2017-04-01', 'y': 2857},
-                         {'x': '2017-05-01', 'y': 3343},
-                         {'x': '2017-06-01', 'y': 2703},
-                         {'x': '2017-07-01', 'y': 3160},
-                         {'x': '2017-08-01', 'y': 3272},
-                         {'x': '2017-09-01', 'y': 3249},
-                         {'x': '2017-10-01', 'y': 3634},
-                         {'x': '2017-11-01', 'y': 3401},
-                         {'x': '2017-12-01', 'y': 3953},
-                         {'x': '2018-01-01', 'y': 3601},
-                         {'x': '2018-02-01', 'y': 2963},
-                         {'x': '2018-03-01', 'y': 2997},
-                         {'x': '2018-04-01', 'y': 3282},
-                         {'x': '2018-05-01', 'y': 3367},
-                         {'x': '2018-06-01', 'y': 3289},
-                         {'x': '2018-07-01', 'y': 3101},
-                         {'x': '2018-08-01', 'y': 3403},
-                         {'x': '2018-09-01', 'y': 2976},
-                         {'x': '2018-10-01', 'y': 3425},
-                         {'x': '2018-11-01', 'y': 2836},
-                         {'x': '2018-12-01', 'y': 3196},
-                         {'x': '2019-01-01', 'y': 2243},
-                         {'x': '2019-02-01', 'y': 3106},
-                         {'x': '2019-03-01', 'y': 3079},
-                         
-                                            ]
-                  };
+ 
 
 
                   ctx = document.getElementById("production-chart").getContext('2d');
